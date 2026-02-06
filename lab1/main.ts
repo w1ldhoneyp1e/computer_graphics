@@ -86,7 +86,3 @@ function drawR() {
 drawYa()
 drawK()
 drawR()
-
-const lab1 = { canvas, ctx, w, h }
-
-export { lab1 }
