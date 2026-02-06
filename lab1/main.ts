@@ -2,27 +2,22 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
 if (!ctx) throw new Error('2d context not available')
 
-const w = canvas.width
-const h = canvas.height
-
 const BLACK_COLOR = '#000000'
 const WHITE_COLOR = '#ffffff'
 
 ctx.strokeStyle = BLACK_COLOR
-ctx.lineWidth = 2
+const PI = Math.PI
 
-function drawYa() {
-    if (!ctx) throw new Error('2d context not available')
-
+function drawYa(ctx: CanvasRenderingContext2D) {
     ctx.beginPath()
-    ctx.rect(100, 100, 100, 100)
+    ctx.arc(175, 150, 50, -PI/2, -PI*3/2, true)
     ctx.fillStyle = BLACK_COLOR
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(125, 125, 50, 50)
+    ctx.arc(175, 150, 25, -PI/2, -PI*3/2, true)
     ctx.fillStyle = WHITE_COLOR
-    ctx.fill()
+    ctx.fill()    
 
     ctx.beginPath()
     ctx.rect(200, 100, -25, 200)
@@ -38,9 +33,7 @@ function drawYa() {
     ctx.fill()
 }
 
-function drawK() {
-    if (!ctx) throw new Error('2d context not available')
-
+function drawK(ctx: CanvasRenderingContext2D) {
     ctx.beginPath()
     ctx.rect(250, 100, 25, 200)
     ctx.fillStyle = BLACK_COLOR
@@ -64,18 +57,16 @@ function drawK() {
     ctx.fill()
 }
 
-function drawR() {
-    if (!ctx) throw new Error('2d context not available')
-
+function drawR(ctx: CanvasRenderingContext2D) {
     ctx.beginPath()
-    ctx.rect(400, 100, 100, 100)
+    ctx.arc(425, 150, 50, -PI/2, -PI*3/2)
     ctx.fillStyle = BLACK_COLOR
     ctx.fill()
 
     ctx.beginPath()
-    ctx.rect(425, 125, 50, 50)
+    ctx.arc(425, 150, 25, -PI/2, -PI*3/2)
     ctx.fillStyle = WHITE_COLOR
-    ctx.fill()
+    ctx.fill() 
 
     ctx.beginPath()
     ctx.rect(400, 100, 25, 200)
@@ -83,6 +74,6 @@ function drawR() {
     ctx.fill()
 }
 
-drawYa()
-drawK()
-drawR()
+drawYa(ctx)
+drawK(ctx)
+drawR(ctx)
