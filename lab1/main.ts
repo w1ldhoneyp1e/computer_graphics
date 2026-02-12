@@ -1,10 +1,18 @@
-import {drawCenter, drawPetal, drawStalk} from './flower'
-import {drawYa, drawK, drawR} from './letters'
+import {
+	drawCenter,
+	drawPetals,
+	drawStalk,
+} from './flower'
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
-if (!ctx) throw new Error('2d context not available')
+if (!ctx) {
+	throw new Error('2d context not available')
+}
 
-drawYa(ctx)
-drawK(ctx)
-drawR(ctx)
+drawStalk(ctx)
+drawPetals(ctx, 10, {
+	x: 400,
+	y: 400,
+})
+drawCenter(ctx)
