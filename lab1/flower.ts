@@ -4,9 +4,9 @@ const PETAL_RADIUS = 20
 const PETAL_LENGTH = 60
 const PETAL_COLOR = '#ff0000' // red
 
-const STALK_HEIGHT = 100
-const STALK_WIDTH = 10
-const STALK_COLOR = '#009000' // green
+const STALK_HEIGHT = 220
+const STALK_WIDTH = 16
+const STALK_COLOR = '#009000'
 
 const CENTER_RADIUS = 50
 const CENTER_COLOR = '#ffff00' // yellow
@@ -63,14 +63,19 @@ function drawPetal({
 }
 
 function drawStalk(ctx: CanvasRenderingContext2D, center: Point) {
-	ctx.strokeStyle = STALK_COLOR
+	const cpX = center.x + 100
+	const cpY = center.y + STALK_HEIGHT / 2
+	const endX = center.x + 8
+	const endY = center.y + STALK_HEIGHT
+
 	ctx.beginPath()
 	ctx.moveTo(center.x, center.y)
-	ctx.lineTo(center.x, center.y + STALK_HEIGHT)
-	ctx.lineTo(center.x + STALK_WIDTH, center.y + STALK_HEIGHT)
-	ctx.lineTo(center.x + STALK_WIDTH, center.y)
-	ctx.fillStyle = STALK_COLOR
-	ctx.fill()
+	ctx.quadraticCurveTo(cpX, cpY, endX, endY)
+	ctx.lineCap = 'round'
+	ctx.lineJoin = 'round'
+	ctx.lineWidth = STALK_WIDTH
+	ctx.strokeStyle = STALK_COLOR
+	ctx.stroke()
 }
 
 function drawCenter(ctx: CanvasRenderingContext2D, center: Point) {
