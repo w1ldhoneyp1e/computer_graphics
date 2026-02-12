@@ -1,7 +1,6 @@
 const BLACK_COLOR = '#000000'
 const WHITE_COLOR = '#ffffff'
 
-ctx.strokeStyle = BLACK_COLOR
 const PI = Math.PI
 
 function drawYa(ctx: CanvasRenderingContext2D) {
