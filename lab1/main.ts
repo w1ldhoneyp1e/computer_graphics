@@ -19,4 +19,16 @@ const petalsAmount = 10
 
 drawStalk(ctx, center)
 drawCenter(ctx, center)
-drawPetals(ctx, petalsAmount, center)
+drawPetals({
+	ctx,
+	amount: petalsAmount,
+	center,
+	color: '#ff0000',
+})
+drawPetals({
+	ctx,
+	amount: petalsAmount,
+	center,
+	color: '#FF4F4FEE',
+	angleOffset: Math.PI / 12,
+})
