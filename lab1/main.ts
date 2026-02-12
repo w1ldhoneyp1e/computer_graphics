@@ -12,8 +12,8 @@ if (!ctx) {
 
 
 const center = {
-	x: 400,
-	y: 400,
+	x: 200,
+	y: 200,
 }
 const petalsAmount = 10
 
