@@ -10,9 +10,13 @@ if (!ctx) {
 	throw new Error('2d context not available')
 }
 
-drawStalk(ctx)
-drawPetals(ctx, 10, {
+
+const center = {
 	x: 400,
 	y: 400,
-})
-drawCenter(ctx)
+}
+const petalsAmount = 10
+
+drawStalk(ctx, center)
+drawCenter(ctx, center)
+drawPetals(ctx, petalsAmount, center)
