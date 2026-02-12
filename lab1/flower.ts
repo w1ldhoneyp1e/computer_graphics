@@ -22,10 +22,12 @@ function drawPetal(ctx: CanvasRenderingContext2D, angle: number, center: Point) 
 	const x = center.x + CENTER_RADIUS * Math.cos(angle)
 	const y = center.y + CENTER_RADIUS * Math.sin(angle)
 
-	ctx.strokeStyle = PETAL_COLOR
-	ctx.ellipse(x, y, PETAL_RADIUS, PETAL_HEIGHT, 0, 0, angle)
+	ctx.beginPath()
+	ctx.ellipse(x, y, PETAL_RADIUS, PETAL_HEIGHT, angle, 0, 2 * Math.PI)
 	ctx.fillStyle = PETAL_COLOR
 	ctx.fill()
+	ctx.strokeStyle = PETAL_COLOR
+	ctx.stroke()
 }
 
 function drawStalk(ctx: CanvasRenderingContext2D, center: Point) {
