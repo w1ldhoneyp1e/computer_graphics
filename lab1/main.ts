@@ -1,5 +1,5 @@
-import {draw} from 'flower'
-import {type Drawable} from 'types'
+import {draw} from './flower'
+import {type Drawable} from './types'
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
