@@ -7,7 +7,23 @@
 </head>
 
 <body>
-  <canvas id="canvas" width="1000" height="1000"></canvas>
+  <canvas id="canvas" width="600" height="600"></canvas>
+  <form id="triangle-form">
+    <fieldset>
+      <legend>Добавить треугольник</legend>
+      <label>Вершина 1: X <input type="number" name="v0x" value="100" /></label>
+      <label>Y <input type="number" name="v0y" value="100" /></label>
+      <br />
+      <label>Вершина 2: X <input type="number" name="v1x" value="300" /></label>
+      <label>Y <input type="number" name="v1y" value="100" /></label>
+      <br />
+      <label>Вершина 3: X <input type="number" name="v2x" value="200" /></label>
+      <label>Y <input type="number" name="v2y" value="250" /></label>
+      <br />
+      <label>Цвет <input type="text" name="fillColor" value="#2196f3" /></label>
+      <button type="submit">Добавить</button>
+    </fieldset>
+  </form>
   <script type="module" src="./main.ts"></script>
 </body>
 
