@@ -20,10 +20,9 @@ type LetterProps = {
 	position: Point,
 }
 
-type DrawableProps = FlowerProps | LetterProps
-type Drawable = DrawableProps & {
-	draw: (ctx: CanvasRenderingContext2D, props: DrawableProps) => void,
-}
+type Drawable =
+	| (FlowerProps & {draw: (ctx: CanvasRenderingContext2D, props: FlowerProps) => void})
+	| (LetterProps & {draw: (ctx: CanvasRenderingContext2D, props: LetterProps) => void})
 
 export type {
 	Point,

@@ -105,11 +105,6 @@ function draw(ctx: CanvasRenderingContext2D, props: LetterProps) {
 	ctx.restore()
 }
 
-const letterDrawable = {
-	draw,
-} as const
-
 export {
-	letterDrawable,
 	draw,
 }

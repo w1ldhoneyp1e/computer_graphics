@@ -111,11 +111,6 @@ function draw(ctx: CanvasRenderingContext2D, props: FlowerProps) {
 	}
 }
 
-const flowerDrawable = {
-	draw,
-} as const
-
 export {
-	flowerDrawable,
 	draw,
 }

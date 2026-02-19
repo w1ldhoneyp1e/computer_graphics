@@ -25,7 +25,16 @@ const SCENE: Drawable[] = [
 ]
 
 function renderScene(context: CanvasRenderingContext2D, scene: Drawable[]) {
-	scene.forEach(drawableObj => drawableObj.draw(context, drawableObj))
+	for (const drawableObj of scene) {
+		switch (drawableObj.type) {
+			case 'flower':
+				drawableObj.draw(context, drawableObj)
+				break
+			case 'letter':
+				drawableObj.draw(context, drawableObj)
+				break
+		}
+	}
 }
 
 renderScene(ctx, SCENE)
