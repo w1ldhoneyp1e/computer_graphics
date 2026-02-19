@@ -1,8 +1,5 @@
-import {
-	drawCenter,
-	drawPetals,
-	drawStalk,
-} from './flower'
+import {draw} from 'flower'
+import {type Drawable} from 'types'
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement
 const ctx = canvas.getContext('2d')
@@ -10,25 +7,25 @@ if (!ctx) {
 	throw new Error('2d context not available')
 }
 
+const SCENE: Drawable[] = [
+	{
+		type: 'flower',
+		center: {
+			x: 200,
+			y: 200,
+		},
+		petalsAmount: 10,
+		petalColor: '#ff0000',
+		innerPetals: {
+			color: '#FF4F4FEE',
+			angleOffset: Math.PI / 12,
+		},
+		draw,
+	},
+]
 
-const center = {
-	x: 200,
-	y: 200,
+function renderScene(context: CanvasRenderingContext2D, scene: Drawable[]) {
+	scene.forEach(drawableObj => drawableObj.draw(context, drawableObj))
 }
-const petalsAmount = 10
 
-drawStalk(ctx, center)
-drawCenter(ctx, center)
-drawPetals({
-	ctx,
-	amount: petalsAmount,
-	center,
-	color: '#ff0000',
-})
-drawPetals({
-	ctx,
-	amount: petalsAmount,
-	center,
-	color: '#FF4F4FEE',
-	angleOffset: Math.PI / 12,
-})
+renderScene(ctx, SCENE)

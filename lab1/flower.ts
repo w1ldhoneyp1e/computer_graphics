@@ -1,42 +1,17 @@
-import {type Point} from './types'
+import {type FlowerProps, type Point} from './types'
 
 const PETAL_RADIUS = 20
 const PETAL_LENGTH = 60
-const PETAL_COLOR = '#ff0000' // red
+const PETAL_COLOR = '#ff0000'
 
 const STALK_HEIGHT = 220
 const STALK_WIDTH = 16
 const STALK_COLOR = '#009000'
 
 const CENTER_RADIUS = 50
-const CENTER_COLOR = '#ffff00' // yellow
+const CENTER_COLOR = '#ffff00'
 
-type DrawPetalsParams = {
-	ctx: CanvasRenderingContext2D,
-	amount: number,
-	center: Point,
-	color?: string,
-	angleOffset?: number,
-}
-
-function drawPetals({
-	ctx,
-	amount,
-	center,
-	color = PETAL_COLOR,
-	angleOffset = 0,
-}: DrawPetalsParams) {
-	for (let i = 0; i < amount; i++) {
-		const angle = i * 2 * Math.PI / amount
-		drawPetal({
-			ctx,
-			angle: angle + angleOffset,
-			center,
-			color,
-		})
-	}
-}
-
+const DEFAULT_PETALS_AMOUNT = 10
 
 type DrawPetalParams = {
 	ctx: CanvasRenderingContext2D,
@@ -44,6 +19,7 @@ type DrawPetalParams = {
 	center: Point,
 	color: string,
 }
+
 function drawPetal({
 	ctx,
 	angle,
@@ -60,6 +36,32 @@ function drawPetal({
 	ctx.fill()
 	ctx.strokeStyle = color
 	ctx.stroke()
+}
+
+type PetalsOptions = {
+	ctx: CanvasRenderingContext2D,
+	amount: number,
+	center: Point,
+	color: string,
+	angleOffset?: number,
+}
+
+function drawPetals({
+	ctx,
+	amount,
+	center,
+	color,
+	angleOffset = 0,
+}: PetalsOptions) {
+	for (let i = 0; i < amount; i++) {
+		const angle = i * 2 * Math.PI / amount
+		drawPetal({
+			ctx,
+			angle: angle + angleOffset,
+			center,
+			color,
+		})
+	}
 }
 
 function drawStalk(ctx: CanvasRenderingContext2D, center: Point) {
@@ -86,10 +88,34 @@ function drawCenter(ctx: CanvasRenderingContext2D, center: Point) {
 	ctx.fill()
 }
 
+function draw(ctx: CanvasRenderingContext2D, props: FlowerProps) {
+	const amount = props.petalsAmount ?? DEFAULT_PETALS_AMOUNT
+	const petalColor = props.petalColor ?? PETAL_COLOR
+
+	drawStalk(ctx, props.center)
+	drawCenter(ctx, props.center)
+	drawPetals({
+		ctx,
+		amount,
+		center: props.center,
+		color: petalColor,
+	})
+	if (props.innerPetals) {
+		drawPetals({
+			ctx,
+			amount,
+			center: props.center,
+			color: props.innerPetals.color ?? petalColor,
+			angleOffset: props.innerPetals.angleOffset ?? Math.PI / 12,
+		})
+	}
+}
+
+const flowerDrawable = {
+	draw,
+} as const
 
 export {
-	drawPetals,
-	drawPetal,
-	drawStalk,
-	drawCenter,
+	flowerDrawable,
+	draw,
 }
