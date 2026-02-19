@@ -2,4 +2,13 @@ import {defineConfig} from 'vite'
 
 export default defineConfig({
 	root: '.',
+	publicDir: 'public',
+	build: {
+		rollupOptions: {
+			input: {
+				main: 'index.html',
+				deadman: 'deadman/index.html',
+			},
+		},
+	},
 })

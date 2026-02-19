@@ -39,6 +39,7 @@
     ]
   },
   "include": [
-    "*.ts"
+    "*.ts",
+    "deadman/**/*.ts"
   ]
 }
