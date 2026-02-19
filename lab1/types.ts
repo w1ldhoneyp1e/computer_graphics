@@ -20,13 +20,23 @@ type LetterProps = {
 	position: Point,
 }
 
+type TriangleProps = {
+	type: 'triangle',
+	v0: Point,
+	v1: Point,
+	v2: Point,
+	fillColor: string,
+}
+
 type Drawable =
 	| (FlowerProps & {draw: (ctx: CanvasRenderingContext2D, props: FlowerProps) => void})
 	| (LetterProps & {draw: (ctx: CanvasRenderingContext2D, props: LetterProps) => void})
+	| (TriangleProps & {draw: (ctx: CanvasRenderingContext2D, props: TriangleProps) => void})
 
 export type {
 	Point,
 	FlowerProps,
 	LetterProps,
+	TriangleProps,
 	Drawable,
 }
