@@ -4,8 +4,9 @@ type Point = {
 }
 
 const GALLOWS_COLOR = '#5d4e37'
-const ROPE_COLOR = '#3d3d3d'
-const BODY_COLOR = '#2d2d2d'
+const ROPE_COLOR = '#7C4B00'
+const BODY_COLOR = '#665D40'
+const HEAD_RADIUS = 15
 
 class HangmanRenderer {
 	private readonly parts: (() => void)[]
@@ -71,12 +72,12 @@ class HangmanRenderer {
 
 	private drawHead(): void {
 		const x = this.origin.x + 120
-		const y = this.origin.y - 155
+		const y = this.origin.y - 155 + HEAD_RADIUS
 		this.ctx.strokeStyle = BODY_COLOR
 		this.ctx.lineWidth = 3
 
 		this.ctx.beginPath()
-		this.ctx.arc(x, y, 15, 0, Math.PI * 2)
+		this.ctx.arc(x, y, HEAD_RADIUS, 0, Math.PI * 2)
 		this.ctx.stroke()
 	}
 
