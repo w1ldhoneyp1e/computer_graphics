@@ -74,7 +74,6 @@ function drawStalk(ctx: CanvasRenderingContext2D, center: Point) {
 	ctx.moveTo(center.x, center.y)
 	ctx.quadraticCurveTo(cpX, cpY, endX, endY)
 	ctx.lineCap = 'round'
-	ctx.lineJoin = 'round'
 	ctx.lineWidth = STALK_WIDTH
 	ctx.strokeStyle = STALK_COLOR
 	ctx.stroke()

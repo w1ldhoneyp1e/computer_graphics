@@ -46,13 +46,13 @@ function normalizeWinding(
 	v1: Point,
 	v2: Point,
 ): [Point, Point, Point] {
-	const signedArea = -distanceFromEdge({
+	const signedArea = distanceFromEdge({
 		start: v0,
 		end: v1,
 		point: v2,
 	})
 
-	return signedArea < 0
+	return signedArea > 0
 		? [v0, v2, v1]
 		: [v0, v1, v2]
 }

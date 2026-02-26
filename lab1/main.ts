@@ -1,3 +1,4 @@
+import {draw as drawFlower} from './flower'
 import {draw as drawTriangle} from './triangle'
 import {type Drawable} from './types'
 
@@ -8,7 +9,22 @@ if (!ctx) {
 }
 const context = ctx
 
-let scene: Drawable[] = []
+let scene: Drawable[] = [
+	// {
+	// 	type: 'flower',
+	// 	center: {
+	// 		x: 200,
+	// 		y: 200,
+	// 	},
+	// 	petalsAmount: 10,
+	// 	petalColor: '#ff0000',
+	// 	innerPetals: {
+	// 		color: '#FF4F4FEE',
+	// 		angleOffset: Math.PI / 12,
+	// 	},
+	// 	draw: drawFlower,
+	// },
+]
 
 function renderScene(renderingContext: CanvasRenderingContext2D, sceneToRender: Drawable[]) {
 	for (const drawableObj of sceneToRender) {
