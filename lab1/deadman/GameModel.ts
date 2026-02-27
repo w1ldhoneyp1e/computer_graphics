@@ -54,7 +54,7 @@ class GameModel {
 	}
 
 	isWon(): boolean {
-		const wordUpper = this.word.toUpperCase().replace(/\s/g, '')
+		const wordUpper = this.word.toUpperCase().replace(' ', '')
 		for (let i = 0; i < wordUpper.length; i++) {
 			const ch = wordUpper[i]
 			if (ch !== undefined && !this.correctLetters.has(ch)) {

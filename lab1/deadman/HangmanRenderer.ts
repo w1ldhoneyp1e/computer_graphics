@@ -45,15 +45,7 @@ class HangmanRenderer {
 		this.ctx.beginPath()
 		this.ctx.moveTo(x, y)
 		this.ctx.lineTo(x, y - 220)
-		this.ctx.stroke()
-
-		this.ctx.beginPath()
-		this.ctx.moveTo(x, y - 220)
 		this.ctx.lineTo(x + 120, y - 220)
-		this.ctx.stroke()
-
-		this.ctx.beginPath()
-		this.ctx.moveTo(x + 120, y - 220)
 		this.ctx.lineTo(x + 120, y - 180)
 		this.ctx.stroke()
 	}

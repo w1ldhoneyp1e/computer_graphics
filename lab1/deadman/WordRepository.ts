@@ -13,24 +13,26 @@ class WordRepository {
 		}
 
 		const text = await response.text()
-		const lines = text.trim().split(/\r?\n/)
-			.filter(line => line.trim())
+		this.entries = text
+			.split('\n')
+			.map(line => line.trim())
+			.filter(line => line.length > 0)
+			.map(line => {
+				const i = line.indexOf('|')
+				if (i === -1) {
+					return null
+				}
 
-		for (const line of lines) {
-			const sep = line.indexOf('|')
-			if (sep === -1) {
-				continue
-			}
-
-			const word = line.slice(0, sep).trim()
-			const hint = line.slice(sep + 1).trim()
-			if (word && hint) {
-				this.entries.push({
-					word,
-					hint,
-				})
-			}
-		}
+				const word = line.slice(0, i).trim()
+				const hint = line.slice(i + 1).trim()
+				return word && hint
+					? {
+						word,
+						hint,
+					}
+					: null
+			})
+			.filter((e): e is WordEntry => e !== null)
 
 		if (this.entries.length === 0) {
 			throw new Error('Нет слов в файле')
