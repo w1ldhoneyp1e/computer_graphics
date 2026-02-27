@@ -5,7 +5,7 @@ type ElementDefinition = {
 	id: ElementId,
 	name: string,
 	kind: ElementKind,
-	icon: string,
+	img_url: string,
 }
 
 type Recipe = {

@@ -28,8 +28,6 @@ type DragPreview = {
 	y: number,
 }
 
-const IMAGE_BASE = '/potions/assets/img'
-
 class GameRenderer {
 	private readonly repo: GameRepository
 
@@ -62,7 +60,7 @@ class GameRenderer {
 		const elements = this.repo.getAllElements()
 		for (const el of elements) {
 			const img = new Image()
-			img.src = `${IMAGE_BASE}/${el.id}.png`
+			img.src = el.img_url
 			img.onload = () => {
 				this.imageCache.set(el.id, img)
 			}
@@ -76,7 +74,7 @@ class GameRenderer {
 		}
 		else {
 			this.ctx.textBaseline = 'middle'
-			this.ctx.fillText(element.icon, x, y)
+			this.ctx.fillText(element.name.charAt(0), x, y)
 		}
 	}
 
