@@ -2,6 +2,9 @@ import {GameController} from './GameController'
 import {GameRenderer} from './GameRenderer'
 import {WordRepository} from './WordRepository'
 
+// улучшить ui: разделить подчеркивания пробелами // поправил
+// опционально заменить пассивный mvc
+
 async function init() {
 	const canvas = document.getElementById('canvas') as HTMLCanvasElement
 	const ctxOrNull = canvas.getContext('2d')

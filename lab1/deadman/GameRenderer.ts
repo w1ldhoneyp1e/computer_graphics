@@ -79,6 +79,7 @@ class GameRenderer {
 	private drawMaskedWord(maskedWord: string): void {
 		this.ctx.fillStyle = COLOR_TEXT
 		this.ctx.font = WORD_FONT
+		this.ctx.letterSpacing = '6px'
 		this.ctx.fillText(maskedWord, 80, 420, 600)
 	}
 
