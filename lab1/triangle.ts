@@ -134,7 +134,7 @@ function draw(
 	const imageData = ctx.getImageData(xMin, yMin, xMax - xMin, yMax - yMin)
 	const data = imageData.data
 
-	for (let iy = yMin; iy < yMax; iy++) {
+	for (let iy = yMin; iy < yMax; iy++) { // оптимизировать, не ходить по всему bounding rect
 		const py = iy + 0.5
 		const rowOffset = (iy - yMin) * (xMax - xMin) * 4
 		for (let ix = xMin; ix < xMax; ix++) {
