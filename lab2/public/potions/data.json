@@ -1,0 +1,368 @@
+{
+  "elements": [
+    {
+      "id": "water_bottle",
+      "name": "Бутылочка воды",
+      "kind": "ingredient",
+      "accent": "#38bdf8",
+      "icon": "🧪"
+    },
+    {
+      "id": "nether_wart",
+      "name": "Адский нарост",
+      "kind": "ingredient",
+      "accent": "#f97373",
+      "icon": "🌶️"
+    },
+    {
+      "id": "sugar",
+      "name": "Сахар",
+      "kind": "ingredient",
+      "accent": "#e5e7eb",
+      "icon": "🍬"
+    },
+    {
+      "id": "spider_eye",
+      "name": "Паучий глаз",
+      "kind": "ingredient",
+      "accent": "#f97316",
+      "icon": "👁️"
+    },
+    {
+      "id": "fermented_spider_eye",
+      "name": "Маринованный паучий глаз",
+      "kind": "ingredient",
+      "accent": "#a855f7",
+      "icon": "🧿"
+    },
+    {
+      "id": "rabbit_foot",
+      "name": "Кроличья лапка",
+      "kind": "ingredient",
+      "accent": "#facc15",
+      "icon": "🐇"
+    },
+    {
+      "id": "blaze_powder",
+      "name": "Огненный порошок",
+      "kind": "ingredient",
+      "accent": "#f97316",
+      "icon": "🔥"
+    },
+    {
+      "id": "ghast_tear",
+      "name": "Слеза гаста",
+      "kind": "ingredient",
+      "accent": "#e5e7eb",
+      "icon": "💧"
+    },
+    {
+      "id": "golden_carrot",
+      "name": "Золотая морковь",
+      "kind": "ingredient",
+      "accent": "#fbbf24",
+      "icon": "🥕"
+    },
+    {
+      "id": "turtle_shell",
+      "name": "Черепаший панцирь",
+      "kind": "ingredient",
+      "accent": "#22c55e",
+      "icon": "🐢"
+    },
+    {
+      "id": "phantom_membrane",
+      "name": "Мембрана фантома",
+      "kind": "ingredient",
+      "accent": "#a5b4fc",
+      "icon": "👻"
+    },
+    {
+      "id": "gunpowder",
+      "name": "Порох",
+      "kind": "ingredient",
+      "accent": "#9ca3af",
+      "icon": "💣"
+    },
+    {
+      "id": "dragon_breath",
+      "name": "Дыхание дракона",
+      "kind": "ingredient",
+      "accent": "#ec4899",
+      "icon": "🐉"
+    },
+    {
+      "id": "awkward_potion",
+      "name": "Неловкое зелье",
+      "kind": "potion",
+      "accent": "#38bdf8",
+      "icon": "✨"
+    },
+    {
+      "id": "swiftness_potion",
+      "name": "Зелье стремительности",
+      "kind": "potion",
+      "accent": "#a5b4fc",
+      "icon": "💨"
+    },
+    {
+      "id": "swiftness_potion_long",
+      "name": "Зелье стремительности (дл.)",
+      "kind": "potion",
+      "accent": "#60a5fa",
+      "icon": "⏱️"
+    },
+    {
+      "id": "swiftness_potion_strong",
+      "name": "Зелье стремительности II",
+      "kind": "potion",
+      "accent": "#2563eb",
+      "icon": "⚡"
+    },
+    {
+      "id": "leaping_potion",
+      "name": "Зелье прыгучести",
+      "kind": "potion",
+      "accent": "#22c55e",
+      "icon": "🦘"
+    },
+    {
+      "id": "strength_potion",
+      "name": "Зелье силы",
+      "kind": "potion",
+      "accent": "#f97316",
+      "icon": "💪"
+    },
+    {
+      "id": "regeneration_potion",
+      "name": "Зелье регенерации",
+      "kind": "potion",
+      "accent": "#ec4899",
+      "icon": "❤️"
+    },
+    {
+      "id": "night_vision_potion",
+      "name": "Зелье ночного зрения",
+      "kind": "potion",
+      "accent": "#facc15",
+      "icon": "🌙"
+    },
+    {
+      "id": "invisibility_potion",
+      "name": "Зелье невидимости",
+      "kind": "potion",
+      "accent": "#9ca3af",
+      "icon": "🙈"
+    },
+    {
+      "id": "turtle_master_potion",
+      "name": "Зелье черепашьего мастера",
+      "kind": "potion",
+      "accent": "#22c55e",
+      "icon": "🛡️"
+    },
+    {
+      "id": "slow_falling_potion",
+      "name": "Зелье медленного падения",
+      "kind": "potion",
+      "accent": "#a5b4fc",
+      "icon": "🕊️"
+    },
+    {
+      "id": "weakness_potion",
+      "name": "Зелье слабости",
+      "kind": "potion",
+      "accent": "#9ca3af",
+      "icon": "🥄"
+    },
+    {
+      "id": "poison_potion",
+      "name": "Зелье отравления",
+      "kind": "potion",
+      "accent": "#22c55e",
+      "icon": "☠️"
+    },
+    {
+      "id": "splash_potion",
+      "name": "Взрывное зелье",
+      "kind": "potion",
+      "accent": "#f97373",
+      "icon": "💥"
+    },
+    {
+      "id": "lingering_potion",
+      "name": "Туманное зелье",
+      "kind": "potion",
+      "accent": "#a855f7",
+      "icon": "🌫️"
+    }
+  ],
+  "initialElements": [
+    "water_bottle",
+    "nether_wart",
+    "sugar",
+    "spider_eye"
+  ],
+  "recipes": [
+    {
+      "inputA": "water_bottle",
+      "inputB": "nether_wart",
+      "outputs": [
+        "awkward_potion"
+      ],
+      "message": "Адский нарост превратил обычную воду в неловкое зелье."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "sugar",
+      "outputs": [
+        "swiftness_potion"
+      ],
+      "message": "Сахар сделал зелье легче, и оно даёт стремительность."
+    },
+    {
+      "inputA": "swiftness_potion",
+      "inputB": "sugar",
+      "outputs": [
+        "swiftness_potion_long"
+      ],
+      "message": "Ещё немного сахара продлило действие стремительности."
+    },
+    {
+      "inputA": "swiftness_potion",
+      "inputB": "nether_wart",
+      "outputs": [
+        "swiftness_potion_strong"
+      ],
+      "message": "Адский нарост усилил эффект стремительности."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "rabbit_foot",
+      "outputs": [
+        "leaping_potion"
+      ],
+      "message": "Кроличья лапка дарит лёгкость и высокий прыжок."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "blaze_powder",
+      "outputs": [
+        "strength_potion"
+      ],
+      "message": "Огненный порошок зарядил зелье силой."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "ghast_tear",
+      "outputs": [
+        "regeneration_potion"
+      ],
+      "message": "Слёзы гаста превратились в зелье регенерации."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "golden_carrot",
+      "outputs": [
+        "night_vision_potion"
+      ],
+      "message": "Золотая морковь позволяет видеть во тьме."
+    },
+    {
+      "inputA": "night_vision_potion",
+      "inputB": "fermented_spider_eye",
+      "outputs": [
+        "invisibility_potion"
+      ],
+      "message": "Искажённая магия паучьего глаза скрыла тебя из виду."
+    },
+    {
+      "inputA": "water_bottle",
+      "inputB": "fermented_spider_eye",
+      "outputs": [
+        "weakness_potion"
+      ],
+      "message": "Маринованный паучий глаз ослабил зелье до слабости."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "spider_eye",
+      "outputs": [
+        "poison_potion"
+      ],
+      "message": "Паучий яд превратился в зелье отравления."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "turtle_shell",
+      "outputs": [
+        "turtle_master_potion"
+      ],
+      "message": "Панцирь делает тело медленным, но почти неуязвимым."
+    },
+    {
+      "inputA": "awkward_potion",
+      "inputB": "phantom_membrane",
+      "outputs": [
+        "slow_falling_potion"
+      ],
+      "message": "Мембрана фантома научила тебя падать медленно."
+    },
+    {
+      "inputA": "spider_eye",
+      "inputB": "sugar",
+      "outputs": [
+        "fermented_spider_eye"
+      ],
+      "message": "Паучий глаз в сладком растворе превратился в маринованный."
+    },
+    {
+      "inputA": "water_bottle",
+      "inputB": "spider_eye",
+      "outputs": [
+        "poison_potion"
+      ],
+      "message": "Сырое зелье с паучьим глазом стало отравленным."
+    },
+    {
+      "inputA": "swiftness_potion",
+      "inputB": "gunpowder",
+      "outputs": [
+        "splash_potion"
+      ],
+      "message": "Порох сделал зелье взрывным и разбрызгивающимся."
+    },
+    {
+      "inputA": "poison_potion",
+      "inputB": "gunpowder",
+      "outputs": [
+        "splash_potion"
+      ],
+      "message": "Ядовитое зелье теперь разлетается во все стороны."
+    },
+    {
+      "inputA": "splash_potion",
+      "inputB": "dragon_breath",
+      "outputs": [
+        "lingering_potion"
+      ],
+      "message": "Дыхание дракона оставляет облако зелья в воздухе."
+    },
+    {
+      "inputA": "weakness_potion",
+      "inputB": "gunpowder",
+      "outputs": [
+        "splash_potion"
+      ],
+      "message": "Слабость теперь можно разбрызгать по площади."
+    },
+    {
+      "inputA": "regeneration_potion",
+      "inputB": "sugar",
+      "outputs": [
+        "regeneration_potion"
+      ],
+      "message": "Сладкое дополнение чуть улучшило регенерацию."
+    }
+  ]
+}

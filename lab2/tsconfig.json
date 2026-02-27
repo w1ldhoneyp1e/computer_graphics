@@ -41,5 +41,5 @@
   "include": [
     "*.ts",
     "potions/**/*.ts"
-  ]
+    , "potions/controller/GameController.ts", "potions/model/GameRepository.ts", "potions/view/GameViepotions/model/potions/controller/SoundManager.tsntroller/SoundManagepotions/model/GameTypes.tsTypes.ts" ]
 }

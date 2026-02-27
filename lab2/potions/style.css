@@ -1,0 +1,151 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: 'Roboto', 'Times New Roman', serif;
+	background-color: #f5ecd8;
+	color: #4b3a29;
+}
+
+button {
+	font: inherit;
+}
+
+[hidden] {
+	display: none !important;
+}
+
+.page {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 18px 16px 28px;
+}
+
+.page-header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 12px;
+}
+
+.page-header-left {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.page-title {
+	margin: 0;
+	font-size: 26px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #3a2a1a;
+}
+
+.page-subtitle {
+	margin: 0;
+	font-size: 14px;
+	color: #7a6a57;
+}
+
+.page-header-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 14px;
+	border-radius: 8px;
+	border: 1px solid #c7b08a;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.2;
+	transition:
+		background-color 120ms ease,
+		border-color 120ms ease,
+		color 120ms ease;
+	white-space: nowrap;
+}
+
+.btn-primary {
+	background-color: #2f855a;
+	color: #fdfaf4;
+}
+
+.btn-primary:hover {
+	background-color: #276749;
+}
+
+.btn-secondary {
+	background-color: #fdf7eb;
+	color: #4b3a29;
+	border-color: #d4c2a2;
+}
+
+.btn-secondary:hover {
+	background-color: #f3e4cc;
+}
+
+.canvas-wrapper {
+	display: flex;
+	justify-content: center;
+	padding: 10px 0 0;
+}
+
+.canvas-wrapper canvas {
+	display: block;
+	width: 100%;
+	border-radius: 12px;
+	border: 1px solid #d1b890;
+	background-color: #fdf7eb;
+}
+
+.overlay {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(245, 236, 216, 0.8);
+	z-index: 20;
+}
+
+.overlay-card {
+	max-width: 420px;
+	width: 100%;
+	margin: 0 16px;
+	border-radius: 12px;
+	background-color: #fdf7eb;
+	border: 1px solid #d1b890;
+	padding: 18px 20px 16px;
+	box-shadow: none;
+}
+
+.overlay-title {
+	margin: 0 0 4px;
+	font-size: 20px;
+	color: #3a2a1a;
+}
+
+.overlay-text {
+	margin: 0 0 12px;
+	font-size: 14px;
+	color: #4b3a29;
+}
+
+.overlay-actions {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
