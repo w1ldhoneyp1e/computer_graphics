@@ -4,169 +4,169 @@
       "id": "water_bottle",
       "name": "Бутылочка воды",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/water_bottle.png"
+      "imgUrl": "/potions/assets/img/water_bottle.png"
     },
     {
       "id": "nether_wart",
       "name": "Адский нарост",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/nether_wart.png"
+      "imgUrl": "/potions/assets/img/nether_wart.png"
     },
     {
       "id": "sugar",
       "name": "Сахар",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/sugar.png"
+      "imgUrl": "/potions/assets/img/sugar.png"
     },
     {
       "id": "spider_eye",
       "name": "Паучий глаз",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/spider_eye.png"
+      "imgUrl": "/potions/assets/img/spider_eye.png"
     },
     {
       "id": "fermented_spider_eye",
       "name": "Приготовленный паучий глаз",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/fermented_spider_eye.png"
+      "imgUrl": "/potions/assets/img/fermented_spider_eye.png"
     },
     {
       "id": "rabbit_foot",
       "name": "Кроличья лапка",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/rabbit_foot.png"
+      "imgUrl": "/potions/assets/img/rabbit_foot.png"
     },
     {
       "id": "blaze_powder",
       "name": "Огненный порошок",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/blaze_powder.png"
+      "imgUrl": "/potions/assets/img/blaze_powder.png"
     },
     {
       "id": "ghast_tear",
       "name": "Слеза гаста",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/ghast_tear.png"
+      "imgUrl": "/potions/assets/img/ghast_tear.png"
     },
     {
       "id": "golden_carrot",
       "name": "Золотая морковь",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/golden_carrot.png"
+      "imgUrl": "/potions/assets/img/golden_carrot.png"
     },
     {
       "id": "turtle_shell",
       "name": "Черепаший панцирь",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/turtle_shell.png"
+      "imgUrl": "/potions/assets/img/turtle_shell.png"
     },
     {
       "id": "phantom_membrane",
       "name": "Мембрана фантома",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/phantom_membrane.png"
+      "imgUrl": "/potions/assets/img/phantom_membrane.png"
     },
     {
       "id": "gunpowder",
       "name": "Порох",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/gunpowder.png"
+      "imgUrl": "/potions/assets/img/gunpowder.png"
     },
     {
       "id": "dragon_breath",
       "name": "Дыхание дракона",
       "kind": "ingredient",
-      "img_url": "/potions/assets/img/dragon_breath.png"
+      "imgUrl": "/potions/assets/img/dragon_breath.png"
     },
     {
       "id": "awkward_potion",
       "name": "Неловкое зелье",
       "kind": "potion",
-      "img_url": "/potions/assets/img/awkward_potion.png"
+      "imgUrl": "/potions/assets/img/awkward_potion.png"
     },
     {
       "id": "swiftness_potion",
       "name": "Зелье стремительности",
       "kind": "potion",
-      "img_url": "/potions/assets/img/swiftness_potion.png"
+      "imgUrl": "/potions/assets/img/swiftness_potion.png"
     },
     {
       "id": "swiftness_potion_long",
       "name": "Зелье стремительности (дл.)",
       "kind": "potion",
-      "img_url": "/potions/assets/img/swiftness_potion_long.png"
+      "imgUrl": "/potions/assets/img/swiftness_potion_long.png"
     },
     {
       "id": "swiftness_potion_strong",
       "name": "Зелье стремительности II",
       "kind": "potion",
-      "img_url": "/potions/assets/img/swiftness_potion_strong.png"
+      "imgUrl": "/potions/assets/img/swiftness_potion_strong.png"
     },
     {
       "id": "leaping_potion",
       "name": "Зелье прыгучести",
       "kind": "potion",
-      "img_url": "/potions/assets/img/leaping_potion.png"
+      "imgUrl": "/potions/assets/img/leaping_potion.png"
     },
     {
       "id": "strength_potion",
       "name": "Зелье силы",
       "kind": "potion",
-      "img_url": "/potions/assets/img/strength_potion.png"
+      "imgUrl": "/potions/assets/img/strength_potion.png"
     },
     {
       "id": "regeneration_potion",
       "name": "Зелье регенерации",
       "kind": "potion",
-      "img_url": "/potions/assets/img/regeneration_potion.png"
+      "imgUrl": "/potions/assets/img/regeneration_potion.png"
     },
     {
       "id": "night_vision_potion",
       "name": "Зелье ночного зрения",
       "kind": "potion",
-      "img_url": "/potions/assets/img/night_vision_potion.png"
+      "imgUrl": "/potions/assets/img/night_vision_potion.png"
     },
     {
       "id": "invisibility_potion",
       "name": "Зелье невидимости",
       "kind": "potion",
-      "img_url": "/potions/assets/img/invisibility_potion.png"
+      "imgUrl": "/potions/assets/img/invisibility_potion.png"
     },
     {
       "id": "turtle_master_potion",
       "name": "Зелье черепашьей мощи",
       "kind": "potion",
-      "img_url": "/potions/assets/img/turtle_master_potion.png"
+      "imgUrl": "/potions/assets/img/turtle_master_potion.png"
     },
     {
       "id": "slow_falling_potion",
       "name": "Зелье плавного падения",
       "kind": "potion",
-      "img_url": "/potions/assets/img/slow_falling_potion.png"
+      "imgUrl": "/potions/assets/img/slow_falling_potion.png"
     },
     {
       "id": "weakness_potion",
       "name": "Зелье слабости",
       "kind": "potion",
-      "img_url": "/potions/assets/img/weakness_potion.png"
+      "imgUrl": "/potions/assets/img/weakness_potion.png"
     },
     {
       "id": "poison_potion",
       "name": "Зелье отравления",
       "kind": "potion",
-      "img_url": "/potions/assets/img/poison_potion.png"
+      "imgUrl": "/potions/assets/img/poison_potion.png"
     },
     {
       "id": "splash_potion",
       "name": "Зелье урона",
       "kind": "potion",
-      "img_url": "/potions/assets/img/splash_potion.png"
+      "imgUrl": "/potions/assets/img/splash_potion.png"
     },
     {
       "id": "lingering_potion",
       "name": "Туманное зелье",
       "kind": "potion",
-      "img_url": "/potions/assets/img/lingering_potion.png"
+      "imgUrl": "/potions/assets/img/lingering_potion.png"
     }
   ],
   "initialElements": [

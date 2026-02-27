@@ -52,7 +52,7 @@ class GameRenderer {
 		const elements = this.repo.getAllElements()
 		for (const el of elements) {
 			const img = new Image()
-			img.src = el.img_url
+			img.src = el.imgUrl
 			img.onload = () => {
 				this.imageCache.set(el.id, img)
 				if (this.snapshot) {
