@@ -28,7 +28,7 @@ type TriangleProps = {
 	fillColor: string,
 }
 
-type Drawable =
+type Drawable = // сделать нормально
 	| (FlowerProps & {draw: (ctx: CanvasRenderingContext2D, props: FlowerProps) => void})
 	| (LetterProps & {draw: (ctx: CanvasRenderingContext2D, props: LetterProps) => void})
 	| (TriangleProps & {draw: (ctx: CanvasRenderingContext2D, props: TriangleProps) => void})
