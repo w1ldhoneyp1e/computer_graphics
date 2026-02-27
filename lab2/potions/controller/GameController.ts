@@ -36,8 +36,12 @@ class GameController {
 
 	private static readonly FAIL_MESSAGE = 'Комбинация не сработала. Ничего не произошло.'
 
+	private static readonly BOARD_FULL_MESSAGE = 'Нельзя добавить: доска заполнена.'
+
 	private handleChange(snapshot: GameStateSnapshot): void {
-		if (snapshot.lastMessage === GameController.FAIL_MESSAGE) {
+		const isDenied = snapshot.lastMessage === GameController.FAIL_MESSAGE
+			|| snapshot.lastMessage === GameController.BOARD_FULL_MESSAGE
+		if (isDenied) {
 			this.sound.playTradeDenied()
 		}
 		else if (snapshot.openedElements.length > this.lastSnapshotElements) {

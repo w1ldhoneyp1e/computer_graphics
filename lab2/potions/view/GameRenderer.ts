@@ -1,3 +1,4 @@
+import {BOARD_COLS, BOARD_ROWS} from '../constants'
 import {type GameRepository} from '../model/GameRepository'
 import {
 	type BoardItem,
@@ -30,23 +31,14 @@ type DragPreview = {
 
 class GameRenderer {
 	private readonly repo: GameRepository
-
 	private readonly canvas: HTMLCanvasElement
-
 	private readonly ctx: CanvasRenderingContext2D
-
 	private snapshot: GameStateSnapshot | null = null
-
 	private discoveredRects: DiscoveredRect[] = []
-
 	private boardRects: BoardRect[] = []
-
 	private trashRect: Rect | null = null
-
 	private boardAreaRect: Rect | null = null
-
 	private dragPreview: DragPreview | null = null
-
 	private readonly imageCache = new Map<ElementId, HTMLImageElement>()
 
 	constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, repo: GameRepository) {
@@ -237,8 +229,8 @@ class GameRenderer {
 		this.ctx.lineWidth = 1
 		this.ctx.strokeRect(boardX + 0.5, boardY + 0.5, boardW - 1, boardH - 1)
 
-		const cols = 4
-		const rows = 4
+		const cols = BOARD_COLS
+		const rows = BOARD_ROWS
 		const cellW = boardW / cols
 		const cellH = boardH / rows
 

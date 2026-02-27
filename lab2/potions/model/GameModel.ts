@@ -1,3 +1,4 @@
+import {BOARD_CAPACITY} from '../constants'
 import {type GameRepository} from './GameRepository'
 import {
 	type BoardItem,
@@ -51,6 +52,13 @@ class GameModel {
 
 	addToBoard(elementId: ElementId): void {
 		if (this.isCompleted) {
+			return
+		}
+
+		if (this.board.length >= BOARD_CAPACITY) {
+			this.lastMessage = 'Нельзя добавить: доска заполнена.'
+			this.notify()
+
 			return
 		}
 
