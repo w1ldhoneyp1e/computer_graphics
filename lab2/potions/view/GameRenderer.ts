@@ -67,7 +67,7 @@ class GameRenderer {
 		}
 	}
 
-	private drawElementIcon(element: ElementDefinition, x: number, y: number, size: number): void {
+	private drawElementImg(element: ElementDefinition, x: number, y: number, size: number): void {
 		const img = this.imageCache.get(element.id)
 		if (img && img.complete && img.naturalWidth > 0) {
 			this.ctx.drawImage(img, x, y - size / 2, size, size)
@@ -207,7 +207,7 @@ class GameRenderer {
 
 			this.ctx.font = '13px Roboto'
 			this.ctx.fillStyle = '#1f2933'
-			this.drawElementIcon(element, x + 8, y + cardH / 2, 24)
+			this.drawElementImg(element, x + 8, y + cardH / 2, 24)
 
 			this.ctx.fillStyle = '#292421'
 			this.ctx.fillText(element.name, x + 34, y + cardH / 2)
@@ -296,14 +296,8 @@ class GameRenderer {
 			this.ctx.lineWidth = 1
 			this.ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1)
 
-			this.ctx.font = '28px Roboto'
-			this.ctx.textBaseline = 'middle'
-			this.ctx.fillStyle = '#1f2933'
-			this.drawElementIcon(element, x + 12, y + h / 2, 28)
-
-			this.ctx.font = '14px Roboto'
-			this.ctx.fillStyle = '#292421'
-			this.ctx.fillText(element.name, x + 46, y + h / 2)
+			const imgSize = 60
+			this.drawElementImg(element, x + w / 2 - imgSize / 2, y + h / 2, imgSize)
 		}
 	}
 
@@ -437,7 +431,7 @@ class GameRenderer {
 		this.ctx.font = '24px Roboto'
 		this.ctx.textBaseline = 'middle'
 		this.ctx.fillStyle = '#1f2933'
-		this.drawElementIcon(element, x + 8, y + h / 2, 24)
+		this.drawElementImg(element, x + 8, y + h / 2, 24)
 
 		this.ctx.font = '13px Roboto'
 		this.ctx.fillStyle = '#292421'
