@@ -34,13 +34,17 @@ class GameController {
 		this.model.reset()
 	}
 
-	private handleChange(snapshot: GameStateSnapshot): void {
-		if (snapshot.lastMessage) {
-			this.sound.playNewCombination()
-		}
+	private static readonly FAIL_MESSAGE = 'Комбинация не сработала. Ничего не произошло.'
 
-		if (snapshot.openedElements.length > this.lastSnapshotElements) {
-			this.sound.playElementCreation()
+	private handleChange(snapshot: GameStateSnapshot): void {
+		if (snapshot.lastMessage === GameController.FAIL_MESSAGE) {
+			this.sound.playTradeDenied()
+		}
+		else if (snapshot.openedElements.length > this.lastSnapshotElements) {
+			this.sound.playExp()
+		}
+		else if (snapshot.lastMessage) {
+			this.sound.playBrew()
 		}
 
 		this.lastSnapshotElements = snapshot.openedElements.length

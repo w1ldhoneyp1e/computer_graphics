@@ -1,43 +1,47 @@
-const CREATION_SOUND_URL = '/potions/assets/creation.mp3'
-const EXPLORING_SOUND_URL = '/potions/assets/exploring.mp3'
+const BREW_SOUND_URL = '/potions/assets/brew.mp3'
+const EXP_SOUND_URL = '/potions/assets/exp.mp3'
+const TRADE_DENIED_SOUND_URL = '/potions/assets/trade_denied.mp3'
 
 class SoundManager {
-	private creationAudio: HTMLAudioElement | null = null
-	private exploringAudio: HTMLAudioElement | null = null
+	private brewAudio: HTMLAudioElement | null = null
+	private expAudio: HTMLAudioElement | null = null
+	private tradeDeniedAudio: HTMLAudioElement | null = null
 
 	constructor() {
 		if (typeof window === 'undefined') {
 			return
 		}
 
-		this.creationAudio = new Audio(CREATION_SOUND_URL)
-		this.exploringAudio = new Audio(EXPLORING_SOUND_URL)
+		this.brewAudio = new Audio(BREW_SOUND_URL)
+		this.expAudio = new Audio(EXP_SOUND_URL)
+		this.tradeDeniedAudio = new Audio(TRADE_DENIED_SOUND_URL)
 	}
 
-	playNewCombination(): void {
-		this.playExploring()
-	}
-
-	playElementCreation(): void {
-		this.playCreation()
-	}
-
-	private playCreation(): void {
-		if (!this.creationAudio) {
+	playBrew(): void {
+		if (!this.brewAudio) {
 			return
 		}
 
-		this.creationAudio.currentTime = 0
-		this.creationAudio.play().catch(() => {})
+		this.brewAudio.currentTime = 0
+		this.brewAudio.play().catch(() => {})
 	}
 
-	private playExploring(): void {
-		if (!this.exploringAudio) {
+	playExp(): void {
+		if (!this.expAudio) {
 			return
 		}
 
-		this.exploringAudio.currentTime = 0
-		this.exploringAudio.play().catch(() => {})
+		this.expAudio.currentTime = 0
+		this.expAudio.play().catch(() => {})
+	}
+
+	playTradeDenied(): void {
+		if (!this.tradeDeniedAudio) {
+			return
+		}
+
+		this.tradeDeniedAudio.currentTime = 0
+		this.tradeDeniedAudio.play().catch(() => {})
 	}
 }
 
