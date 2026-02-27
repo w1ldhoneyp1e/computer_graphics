@@ -63,6 +63,9 @@ class GameRenderer {
 			img.src = el.img_url
 			img.onload = () => {
 				this.imageCache.set(el.id, img)
+				if (this.snapshot) {
+					this.render(this.snapshot)
+				}
 			}
 		}
 	}
