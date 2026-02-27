@@ -78,7 +78,6 @@ class GameRenderer {
 
 		this.clear()
 		this.drawBackground()
-		this.drawFrame()
 		this.drawDiscovered(snapshot.openedElements)
 		this.drawBoard(snapshot.boardItems)
 		this.drawTrash()
@@ -144,26 +143,18 @@ class GameRenderer {
 		this.ctx.fillRect(0, 0, width, height)
 	}
 
-	private drawFrame(): void {
-	}
-
 	private drawDiscovered(ids: ElementId[]): void {
 		const allElements = this.repo.getAllElements()
-		const elements: ElementDefinition[] = []
-
-		for (const id of ids) {
-			const found = allElements.find(element => element.id === id)
-			if (found) {
-				elements.push(found)
-			}
-		}
-
-		elements.sort((a, b) => a.name.localeCompare(b.name, 'ru'))
+		const elements = ids
+			.map(id => allElements.find(el => el.id === id))
+			.filter((el): el is ElementDefinition => el !== undefined)
+			.sort((a, b) => a.name.localeCompare(b.name, 'ru'))
 
 		const startX = 50
 		const startY = 60
 		const cardW = 190
 		const cardH = 40
+		const gapX = 12
 		const gapY = 8
 		const maxPerColumn = 10
 
@@ -180,7 +171,7 @@ class GameRenderer {
 
 			const column = Math.floor(index / maxPerColumn)
 			const row = index % maxPerColumn
-			const x = startX + column * (cardW + 12)
+			const x = startX + column * (cardW + gapX)
 			const y = startY + row * (cardH + gapY)
 
 			const rect: DiscoveredRect = {

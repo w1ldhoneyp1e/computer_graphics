@@ -33,8 +33,15 @@ type GameStateSnapshot = {
 	isCompleted: boolean,
 }
 
+type DragSource = {
+	source: 'discovered' | 'board',
+	elementId: ElementId,
+	instanceId: string | null,
+}
+
 export {
 	type BoardItem,
+	type DragSource,
 	type ElementDefinition,
 	type ElementId,
 	type ElementKind,

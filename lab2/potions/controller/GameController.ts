@@ -1,5 +1,5 @@
 import {type GameModel, type Listener} from '../model/GameModel'
-import {type ElementId, type GameStateSnapshot} from '../model/types'
+import {type DragSource, type GameStateSnapshot} from '../model/types'
 import {type DragPreview, type GameRenderer} from '../view/GameRenderer'
 import {type SoundManager} from './SoundManager'
 
@@ -10,11 +10,7 @@ class GameController {
 	private lastSnapshotElements = 0
 	private readonly canvas: HTMLCanvasElement
 
-	private dragSource: {
-		source: 'discovered' | 'board',
-		elementId: ElementId,
-		instanceId: string | null,
-	} | null = null
+	private dragSource: DragSource | null = null
 
 	constructor(model: GameModel, view: GameRenderer, sound: SoundManager, canvas: HTMLCanvasElement) {
 		this.model = model
@@ -35,12 +31,13 @@ class GameController {
 	}
 
 	private static readonly FAIL_MESSAGE = 'Комбинация не сработала. Ничего не произошло.'
-
 	private static readonly BOARD_FULL_MESSAGE = 'Нельзя добавить: доска заполнена.'
 
 	private handleChange(snapshot: GameStateSnapshot): void {
-		const isDenied = snapshot.lastMessage === GameController.FAIL_MESSAGE
+		const isDenied
+			= snapshot.lastMessage === GameController.FAIL_MESSAGE
 			|| snapshot.lastMessage === GameController.BOARD_FULL_MESSAGE
+
 		if (isDenied) {
 			this.sound.playTradeDenied()
 		}
