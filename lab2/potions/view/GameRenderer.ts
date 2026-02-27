@@ -167,9 +167,9 @@ class GameRenderer {
 
 		const startX = 50
 		const startY = 60
-		const cardW = 250
+		const cardW = 190
 		const cardH = 40
-		const gapY = 6
+		const gapY = 8
 		const maxPerColumn = 10
 
 		this.discoveredRects = []
@@ -215,9 +215,9 @@ class GameRenderer {
 	}
 
 	private drawBoard(items: BoardItem[]): void {
-		const boardX = 380
+		const boardX = 650
 		const boardY = 60
-		const boardW = 770
+		const boardW = 500
 		const boardH = 430
 
 		this.boardAreaRect = {
@@ -235,7 +235,7 @@ class GameRenderer {
 		this.ctx.strokeRect(boardX + 0.5, boardY + 0.5, boardW - 1, boardH - 1)
 
 		const cols = 4
-		const rows = 3
+		const rows = 4
 		const cellW = boardW / cols
 		const cellH = boardH / rows
 
@@ -308,10 +308,10 @@ class GameRenderer {
 	}
 
 	private drawTrash(): void {
-		const x = 380
-		const y = 510
-		const w = 150
-		const h = 80
+		const x = 520
+		const y = 550
+		const w = 120
+		const h = 60
 
 		this.trashRect = {
 			x,
@@ -337,10 +337,10 @@ class GameRenderer {
 	}
 
 	private drawProgress(current: number, total: number): void {
-		const x = 560
-		const y = 520
+		const x = 680
+		const y = 550
 		const w = 380
-		const h = 56
+		const h = 60
 
 		this.ctx.fillStyle = '#f2ead9'
 		this.ctx.fillRect(x, y, w, h)
@@ -384,9 +384,9 @@ class GameRenderer {
 
 	private drawMessage(displayText: string): void {
 		const x = 50
-		const y = 510
-		const w = 300
-		const h = 80
+		const y = 550
+		const w = 430
+		const h = 60
 
 		this.ctx.fillStyle = '#f2ead9'
 		this.ctx.fillRect(x, y, w, h)
