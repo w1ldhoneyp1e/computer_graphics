@@ -28,6 +28,8 @@ type DragPreview = {
 	y: number,
 }
 
+const IMAGE_BASE = '/potions/assets/img'
+
 class GameRenderer {
 	private readonly repo: GameRepository
 
@@ -47,10 +49,35 @@ class GameRenderer {
 
 	private dragPreview: DragPreview | null = null
 
+	private readonly imageCache = new Map<ElementId, HTMLImageElement>()
+
 	constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, repo: GameRepository) {
 		this.repo = repo
 		this.canvas = canvas
 		this.ctx = ctx
+		this.preloadImages()
+	}
+
+	private preloadImages(): void {
+		const elements = this.repo.getAllElements()
+		for (const el of elements) {
+			const img = new Image()
+			img.src = `${IMAGE_BASE}/${el.id}.png`
+			img.onload = () => {
+				this.imageCache.set(el.id, img)
+			}
+		}
+	}
+
+	private drawElementIcon(element: ElementDefinition, x: number, y: number, size: number): void {
+		const img = this.imageCache.get(element.id)
+		if (img && img.complete && img.naturalWidth > 0) {
+			this.ctx.drawImage(img, x, y - size / 2, size, size)
+		}
+		else {
+			this.ctx.textBaseline = 'middle'
+			this.ctx.fillText(element.icon, x, y)
+		}
 	}
 
 	render(snapshot: GameStateSnapshot): void {
@@ -63,7 +90,8 @@ class GameRenderer {
 		this.drawBoard(snapshot.boardItems)
 		this.drawTrash()
 		this.drawProgress(snapshot.openedElements.length, snapshot.totalElements)
-		this.drawMessage(snapshot.lastMessage ?? 'Начни с базовых ингредиентов и открой все зелья.')
+		const displayText = snapshot.lastMessage ?? 'Начни с базовых ингредиентов и открой все зелья.'
+		this.drawMessage(displayText)
 
 		if (this.dragPreview) {
 			this.drawDragPreview(this.dragPreview)
@@ -175,12 +203,13 @@ class GameRenderer {
 			this.ctx.fillStyle = 'rgba(250, 243, 221, 0.9)'
 			this.ctx.fillRect(x, y, cardW, cardH)
 
-			this.ctx.strokeStyle = element.accent
+			this.ctx.strokeStyle = '#d1b890'
 			this.ctx.lineWidth = 1
 			this.ctx.strokeRect(x + 0.5, y + 0.5, cardW - 1, cardH - 1)
 
+			this.ctx.font = '13px Roboto'
 			this.ctx.fillStyle = '#1f2933'
-			this.ctx.fillText(element.icon, x + 8, y + cardH / 2)
+			this.drawElementIcon(element, x + 8, y + cardH / 2, 24)
 
 			this.ctx.fillStyle = '#292421'
 			this.ctx.fillText(element.name, x + 34, y + cardH / 2)
@@ -265,14 +294,14 @@ class GameRenderer {
 			this.ctx.fillStyle = '#fbf5e6'
 			this.ctx.fillRect(x, y, w, h)
 
-			this.ctx.strokeStyle = element.accent
+			this.ctx.strokeStyle = '#d1b890'
 			this.ctx.lineWidth = 1
 			this.ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1)
 
 			this.ctx.font = '28px Roboto'
 			this.ctx.textBaseline = 'middle'
 			this.ctx.fillStyle = '#1f2933'
-			this.ctx.fillText(element.icon, x + 12, y + h / 2)
+			this.drawElementIcon(element, x + 12, y + h / 2, 28)
 
 			this.ctx.font = '14px Roboto'
 			this.ctx.fillStyle = '#292421'
@@ -355,7 +384,7 @@ class GameRenderer {
 		this.ctx.fillRect(barX, barY, fillW, barH)
 	}
 
-	private drawMessage(text: string): void {
+	private drawMessage(displayText: string): void {
 		const x = 50
 		const y = 510
 		const w = 300
@@ -372,7 +401,7 @@ class GameRenderer {
 		this.ctx.fillStyle = '#6b5a45'
 		this.ctx.textBaseline = 'top'
 
-		const words = text.split(' ')
+		const words = displayText.split(' ')
 		let currentLine = ''
 		let offsetY = y + 8
 
@@ -410,7 +439,7 @@ class GameRenderer {
 		this.ctx.font = '24px Roboto'
 		this.ctx.textBaseline = 'middle'
 		this.ctx.fillStyle = '#1f2933'
-		this.ctx.fillText(element.icon, x + 8, y + h / 2)
+		this.drawElementIcon(element, x + 8, y + h / 2, 24)
 
 		this.ctx.font = '13px Roboto'
 		this.ctx.fillStyle = '#292421'
