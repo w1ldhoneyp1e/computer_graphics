@@ -35,12 +35,12 @@ class GameController {
 	}
 
 	private handleChange(snapshot: GameStateSnapshot): void {
-		if (snapshot.message) {
+		if (snapshot.lastMessage) {
 			this.sound.playNewCombination()
 		}
 
 		if (snapshot.openedElements.length > this.lastSnapshotElements) {
-			this.sound.playNewElement()
+			this.sound.playElementCreation()
 		}
 
 		this.lastSnapshotElements = snapshot.openedElements.length

@@ -15,10 +15,10 @@ class SoundManager {
 	}
 
 	playNewCombination(): void {
-		this.playCreation()
+		this.playExploring()
 	}
 
-	playNewElement(): void {
+	playElementCreation(): void {
 		this.playCreation()
 	}
 

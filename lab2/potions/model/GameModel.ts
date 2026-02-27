@@ -13,7 +13,7 @@ class GameModel {
 	private readonly opened = new Set<ElementId>()
 	private board: BoardItem[] = []
 	private readonly listeners = new Set<Listener>()
-	private message: string | null = null
+	private lastMessage: string | null = null
 	private isCompleted = false
 	private readonly recipesIndex: Map<string, RecipeIndexEntry>
 
@@ -38,7 +38,7 @@ class GameModel {
 	reset(): void {
 		this.opened.clear()
 		this.board = []
-		this.message = null
+		this.lastMessage = null
 		this.isCompleted = false
 
 		const initial = this.repo.getInitialElements()
@@ -60,7 +60,7 @@ class GameModel {
 			elementId,
 		})
 
-		this.message = null
+		this.lastMessage = null
 		this.notify()
 	}
 
@@ -71,7 +71,7 @@ class GameModel {
 		}
 
 		this.board.splice(index, 1)
-		this.message = null
+		this.lastMessage = null
 		this.notify()
 	}
 
@@ -94,7 +94,7 @@ class GameModel {
 		const recipe = this.recipesIndex.get(key)
 
 		if (!recipe) {
-			this.message = 'Комбинация не сработала. Ничего не произошло.'
+			this.lastMessage = 'Комбинация не сработала. Ничего не произошло.'
 			this.notify()
 
 			return
@@ -103,32 +103,21 @@ class GameModel {
 		this.board = this.board.filter(item => item.instanceId !== sourceId && item.instanceId !== targetId)
 
 		const openedBefore = new Set(this.opened)
-		for (const resultId of recipe.outputs) {
-			const instanceId = this.createInstanceId()
-			this.board.push({
-				instanceId,
-				elementId: resultId,
-			})
-			this.opened.add(resultId)
-		}
+		const instanceId = this.createInstanceId()
+		this.board.push({
+			instanceId,
+			elementId: recipe.output,
+		})
+		this.opened.add(recipe.output)
 
-		const newElements: ElementId[] = []
-		for (const id of this.opened) {
-			if (!openedBefore.has(id)) {
-				newElements.push(id)
-			}
-		}
+		const isNewElement = !openedBefore.has(recipe.output)
 
-		if (newElements.length === 0) {
-			this.message = recipe.message
-		}
-		else if (newElements.length === 1) {
+		if (isNewElement) {
 			const total = this.repo.getAllElements().length
-			this.message = `${recipe.message} Открыт новый элемент (${this.opened.size}/${total}).`
+			this.lastMessage = `${recipe.message} Открыт новый элемент (${this.opened.size}/${total}).`
 		}
 		else {
-			const total = this.repo.getAllElements().length
-			this.message = `${recipe.message} Открыто новых элементов: ${newElements.length} (${this.opened.size}/${total}).`
+			this.lastMessage = recipe.message
 		}
 
 		this.checkCompletion()
@@ -141,7 +130,7 @@ class GameModel {
 		return {
 			openedElements: Array.from(this.opened),
 			boardItems: this.board.slice(),
-			message: this.message,
+			lastMessage: this.lastMessage,
 			totalElements: total,
 			isCompleted: this.isCompleted,
 		}
@@ -160,8 +149,8 @@ class GameModel {
 		if (this.opened.size >= total) {
 			this.isCompleted = true
 
-			if (!this.message) {
-				this.message = 'Ты открыл все элементы!'
+			if (!this.lastMessage) {
+				this.lastMessage = 'Ты открыл все элементы!'
 			}
 		}
 	}
@@ -173,7 +162,7 @@ class GameModel {
 		for (const recipe of recipes) {
 			const key = this.getRecipeKey(recipe.inputA, recipe.inputB)
 			index.set(key, {
-				outputs: recipe.outputs,
+				output: recipe.output,
 				message: recipe.message,
 			})
 		}

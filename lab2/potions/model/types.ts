@@ -5,19 +5,18 @@ type ElementDefinition = {
 	id: ElementId,
 	name: string,
 	kind: ElementKind,
-	accent: string,
 	icon: string,
 }
 
 type Recipe = {
 	inputA: ElementId,
 	inputB: ElementId,
-	outputs: ElementId[],
+	output: ElementId,
 	message: string,
 }
 
 type RecipeIndexEntry = {
-	outputs: ElementId[],
+	output: ElementId,
 	message: string,
 }
 
@@ -29,7 +28,7 @@ type BoardItem = {
 type GameStateSnapshot = {
 	openedElements: ElementId[],
 	boardItems: BoardItem[],
-	message: string | null,
+	lastMessage: string | null,
 	totalElements: number,
 	isCompleted: boolean,
 }
