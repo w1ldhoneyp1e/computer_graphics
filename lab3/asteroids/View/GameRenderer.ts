@@ -105,8 +105,7 @@ class GameRenderer {
 		return [center, ...vertices]
 	}
 
-	private setGeometry(vertices: Point[]): void {
-		const gl = this.gl
+	private getGeometry(vertices: Point[]): Float32Array {
 		const data = new Float32Array(vertices.length * 2)
 		for (let i = 0; i < vertices.length; i++) {
 			const v = vertices[i]
@@ -116,8 +115,8 @@ class GameRenderer {
 			data[i * 2] = v.x
 			data[i * 2 + 1] = v.y
 		}
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
-		gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW)
+
+		return data
 	}
 
 	private drawPolygon({
@@ -127,7 +126,7 @@ class GameRenderer {
 		const gl = this.gl
 		const world = worldVertices(polygon)
 		const withCenter = this.polygonWithCenter(world)
-		this.setGeometry(withCenter)
+		const data = this.getGeometry(withCenter)
 		const rgba = colord(color).toRgb()
 		gl.useProgram(this.program)
 		gl.uniform2f(this.resolutionLoc, this.resolution[0], this.resolution[1])
@@ -140,6 +139,7 @@ class GameRenderer {
 		)
 		gl.enableVertexAttribArray(this.positionLoc)
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
+		gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW)
 		gl.vertexAttribPointer(this.positionLoc, 2, gl.FLOAT, false, 0, 0)
 		gl.drawArrays(gl.TRIANGLE_FAN, 0, withCenter.length)
 	}
