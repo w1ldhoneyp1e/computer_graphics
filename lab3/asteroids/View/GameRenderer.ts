@@ -14,10 +14,10 @@ type DrawPolygonArgs = {
 }
 
 const VS = `#version 100
-attribute Point a_position;
-uniform Point u_resolution;
+attribute vec2 a_position;
+uniform vec2 u_resolution;
 void main() {
-  Point pos = a_position / u_resolution * 2.0 - 1.0;
+  vec2 pos = a_position / u_resolution * 2.0 - 1.0;
   pos.y = -pos.y;
   gl_Position = vec4(pos, 0.0, 1.0);
 }
