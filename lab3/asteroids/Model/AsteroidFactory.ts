@@ -101,6 +101,5 @@ function spawnInitial(width: number, height: number, count: number): Asteroid[] 
 
 export {
 	createAsteroid,
-	radiusForSize,
 	spawnInitial,
 }

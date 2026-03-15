@@ -41,25 +41,20 @@ type GameState = {
 	height: number,
 }
 
-function makePoint(x: number, y: number): Point {
-	return {
-		x,
-		y,
-	}
-}
-
-function shipVertices(): Point[] {
-	return SHIP_VERTICES.map(([x, y]) => makePoint(x, y))
-}
-
 function createShip(width: number, height: number): Ship {
 	return {
-		position: makePoint(width / 2, height / 2),
-		velocity: makePoint(0, 0),
+		position: {
+			x: width / 2,
+			y: height / 2,
+		},
+		velocity: {
+			x: 0,
+			y: 0,
+		},
 		angle: -Math.PI / 2,
 		angularVelocity: 0,
 		thrust: false,
-		vertices: shipVertices(),
+		vertices: SHIP_VERTICES,
 	}
 }
 

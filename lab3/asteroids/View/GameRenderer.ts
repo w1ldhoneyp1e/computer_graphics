@@ -1,5 +1,6 @@
 import {colord} from 'colord'
 import {worldVertices} from '../Shared/Collision'
+import {BULLET_VERTICES, SHIP_FLAME_VERTICES} from '../Shared/constants'
 import {
 	type Asteroid,
 	type Bullet,
@@ -149,25 +150,12 @@ class GameRenderer {
 			polygon: ship,
 			color: 'rgb(102, 204, 102)',
 		})
+
 		if (ship.thrust) {
-			const tail: Point[] = [
-				{
-					x: -8,
-					y: 4,
-				},
-				{
-					x: -14,
-					y: 0,
-				},
-				{
-					x: -8,
-					y: -4,
-				},
-			]
 			this.drawPolygon({
 				polygon: {
 					...ship,
-					vertices: tail,
+					vertices: SHIP_FLAME_VERTICES,
 				},
 				color: 'rgb(255, 128, 26)',
 			})
@@ -182,25 +170,11 @@ class GameRenderer {
 	}
 
 	drawBullets(bullets: Bullet[]): void {
-		const verts: Point[] = [
-			{
-				x: -2,
-				y: -2,
-			},
-			{
-				x: 2,
-				y: -2,
-			},
-			{
-				x: 0,
-				y: 2,
-			},
-		]
 		for (const b of bullets) {
 			this.drawPolygon({
 				polygon: {
 					position: b.position,
-					vertices: verts,
+					vertices: BULLET_VERTICES,
 					angle: 0,
 				},
 				color: 'rgb(255, 255, 204)',
