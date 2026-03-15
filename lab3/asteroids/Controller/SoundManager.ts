@@ -1,8 +1,8 @@
 const SOUNDS = {
-	shoot: '/sounds/shoot.mp3',
-	hit: '/sounds/hit.mp3',
-	destroy: '/sounds/destroy.mp3',
-	shipExplode: '/sounds/ship_explode.mp3',
+	shoot: '/sounds/shoot.wav',
+	hit: '/sounds/hit.wav',
+	destroy: '/sounds/destroy.wav',
+	shipExplode: '/sounds/ship_explode.wav',
 } as const
 
 class SoundManager {
