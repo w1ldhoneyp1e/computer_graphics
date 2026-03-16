@@ -1,5 +1,4 @@
 import {colord} from 'colord'
-import {worldVertices} from '../Shared/Collision'
 import {BULLET_VERTICES, SHIP_FLAME_VERTICES} from '../Shared/constants'
 import {
 	type Asteroid,
@@ -8,6 +7,7 @@ import {
 	type Polygon,
 	type Ship,
 } from '../Shared/types'
+import {worldVertices} from '../Shared/utils'
 
 type DrawPolygonArgs = {
 	polygon: Polygon,
@@ -148,14 +148,18 @@ class GameRenderer {
 	drawShip(ship: Ship): void {
 		this.drawPolygon({
 			polygon: ship,
-			color: 'rgb(102, 204, 102)',
+			color: 'rgb(97 108 124)',
 		})
 
 		if (ship.thrust) {
 			this.drawPolygon({
 				polygon: {
-					...ship,
+					position: {
+						x: ship.position.x,
+						y: ship.position.y,
+					},
 					vertices: SHIP_FLAME_VERTICES,
+					angle: ship.angle,
 				},
 				color: 'rgb(255, 128, 26)',
 			})

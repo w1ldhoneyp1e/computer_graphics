@@ -1,8 +1,4 @@
-import {
-	pointInPolygon,
-	polygonOverlapsPolygon,
-	worldVertices,
-} from '../Shared/Collision'
+import {pointInPolygon, polygonOverlapsPolygon} from '../Shared/collision'
 import {
 	ANGULAR_FRICTION,
 	BULLET_SPEED,
@@ -25,6 +21,7 @@ import {
 	type Point,
 	type Ship,
 } from '../Shared/types'
+import {worldVertices} from '../Shared/utils'
 import {createAsteroid, spawnInitial} from './AsteroidFactory'
 
 const SHOOT_COOLDOWN = 15

@@ -1,4 +1,5 @@
 import {type Point, type Polygon} from './types'
+import {worldVertices} from './utils'
 
 function cross2(a: Point, b: Point): number {
 	return a.x * b.y - a.y * b.x
@@ -35,22 +36,6 @@ function pointInTriangle(p: Point, a: Point, b: Point, c: Point): boolean {
 	const s3 = cross2(ca, cp)
 
 	return (s1 >= 0 && s2 >= 0 && s3 >= 0) || (s1 <= 0 && s2 <= 0 && s3 <= 0)
-}
-
-function worldVertices(polygon: Polygon): Point[] {
-	const {
-		position,
-		vertices,
-		angle,
-	} = polygon
-
-	const cos = Math.cos(angle)
-	const sin = Math.sin(angle)
-
-	return vertices.map(v => ({
-		x: position.x + v.x * cos - v.y * sin,
-		y: position.y + v.x * sin + v.y * cos,
-	}))
 }
 
 function pointInPolygon(point: Point, worldVerts: Point[]): boolean {
@@ -92,7 +77,6 @@ function polygonOverlapsPolygon(a: Polygon, b: Polygon): boolean {
 
 export {
 	pointInPolygon,
-	pointInTriangle,
 	polygonOverlapsPolygon,
-	worldVertices,
 }
+
