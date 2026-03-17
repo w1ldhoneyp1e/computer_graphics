@@ -146,6 +146,11 @@ class GameRenderer {
 	}
 
 	drawShip(ship: Ship): void {
+		const cos = Math.cos(ship.angle)
+		const sin = Math.sin(ship.angle)
+		const flameOffsetX = -10
+		const flameOffsetY = 0
+
 		this.drawPolygon({
 			polygon: ship,
 			color: 'rgb(97 108 124)',
@@ -155,8 +160,8 @@ class GameRenderer {
 			this.drawPolygon({
 				polygon: {
 					position: {
-						x: ship.position.x,
-						y: ship.position.y,
+						x: ship.position.x + flameOffsetX * cos - flameOffsetY * sin,
+						y: ship.position.y + flameOffsetX * sin + flameOffsetY * cos,
 					},
 					vertices: SHIP_FLAME_VERTICES,
 					angle: ship.angle,

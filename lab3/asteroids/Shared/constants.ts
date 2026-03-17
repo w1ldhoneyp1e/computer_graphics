@@ -52,28 +52,24 @@ const SHIP_VERTICES: Point[] = [
 ]
 const SHIP_FLAME_VERTICES: Point[] = [
 	{
-		x: -10,
+		x: 0,
 		y: -5,
 	},
 	{
-		x: -15,
+		x: -2,
 		y: -5,
 	},
 	{
-		x: -10,
+		x: -7,
 		y: 0,
 	},
 	{
-		x: -15,
+		x: -2,
 		y: 5,
 	},
 	{
-		x: -10,
+		x: 0,
 		y: 5,
-	},
-	{
-		x: -10,
-		y: 0,
 	},
 ]
 const BULLET_VERTICES: Point[] = [
