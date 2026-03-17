@@ -32,10 +32,6 @@ type GameState = {
 	bullets: Bullet[],
 	score: number,
 	lives: number,
-	bulletId: number,
-	shootCooldown: number,
-	width: number,
-	height: number,
 }
 
 type UpdateResult = {
@@ -49,9 +45,15 @@ type UpdateResult = {
 
 class GameModel {
 	private state: GameState
+	private lastBulletId = 0
+	private shootCooldown = 0
+	private width: number
+	private height: number
 
 	constructor(width: number, height: number) {
-		this.state = this.initState(width, height)
+		this.state = this.initState()
+		this.width = width
+		this.height = height
 	}
 
 	getState(): GameState {
@@ -67,15 +69,14 @@ class GameModel {
 	}
 
 	reset(): void {
-		const {width, height} = this.state
-		this.state = this.initState(width, height)
+		this.state = this.initState()
 	}
 
-	private createShip(width: number, height: number): Ship {
+	private createShip(): Ship {
 		return {
 			position: {
-				x: width / 2,
-				y: height / 2,
+				x: this.width / 2,
+				y: this.height / 2,
 			},
 			velocity: {
 				x: 0,
@@ -88,19 +89,15 @@ class GameModel {
 		}
 	}
 
-	private initState(width: number, height: number): GameState {
-		const ship = this.createShip(width, height)
+	private initState(): GameState {
+		const ship = this.createShip()
 
 		return {
 			ship,
-			asteroids: spawnInitial(width, height, INITIAL_ASTEROIDS),
+			asteroids: spawnInitial(this.width, this.height, INITIAL_ASTEROIDS),
 			bullets: [],
 			score: 0,
 			lives: LIVES_MAX,
-			bulletId: 0,
-			shootCooldown: 0,
-			width,
-			height,
 		}
 	}
 
@@ -136,10 +133,10 @@ class GameModel {
 	}
 
 	private shoot(state: GameState): void {
-		state.bulletId += 1
+		this.lastBulletId += 1
 		const s = state.ship
 		const bullet: Bullet = {
-			id: state.bulletId,
+			id: this.lastBulletId,
 			position: {
 				x: s.position.x + Math.cos(s.angle) * 16,
 				y: s.position.y + Math.sin(s.angle) * 16,
@@ -182,12 +179,12 @@ class GameModel {
 		if (input.right) {
 			s.angularVelocity += ROTATION_SPEED
 		}
-		if (state.shootCooldown > 0) {
-			state.shootCooldown -= 1
+		if (this.shootCooldown > 0) {
+			this.shootCooldown -= 1
 		}
-		if (input.shoot && state.shootCooldown <= 0) {
+		if (input.shoot && this.shootCooldown <= 0) {
 			this.shoot(state)
-			state.shootCooldown = SHOOT_COOLDOWN
+			this.shootCooldown = SHOOT_COOLDOWN
 			result.soundShoot = true
 		}
 	}
@@ -246,7 +243,7 @@ class GameModel {
 	}
 
 	private updateAsteroids(state: GameState): void {
-		const {width, height} = state
+		const {width, height} = this
 
 		for (const a of state.asteroids) {
 			a.position.x += a.velocity.x
@@ -257,7 +254,6 @@ class GameModel {
 	}
 
 	private handleShipAsteroidCollisions(state: GameState, result: UpdateResult): void {
-		const {width, height} = state
 		const s = state.ship
 
 		let hitAsteroidId: number | null = null
@@ -265,7 +261,7 @@ class GameModel {
 			if (polygonOverlapsPolygon(s, a)) {
 				result.soundShipExplode = true
 				state.lives -= 1
-				state.ship = this.createShip(width, height)
+				state.ship = this.createShip()
 				hitAsteroidId = a.id
 				break
 			}
@@ -301,7 +297,7 @@ class GameModel {
 			soundShipExplode: false,
 		}
 
-		const {width, height} = state
+		const {width, height} = this
 		const shipState = state.ship
 
 		this.handleInput(state, input, result)
