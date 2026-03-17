@@ -1,0 +1,137 @@
+{
+  "background": [0.905, 0.973, 1, 1],
+  "template": [
+    {
+      "id": "body",
+      "type": "circle",
+      "color": [0.678, 0.451, 0.239, 1],
+      "center": [0, 0],
+      "radius": 230
+    },
+    {
+      "id": "leftEar",
+      "type": "circle",
+      "color": [0.678, 0.451, 0.239, 1],
+      "center": [-145, 170],
+      "radius": 45
+    },
+    {
+      "id": "rightEar",
+      "type": "circle",
+      "color": [0.678, 0.451, 0.239, 1],
+      "center": [145, 170],
+      "radius": 45
+    },
+    {
+      "id": "leftEyeWhite",
+      "type": "circle",
+      "color": [1, 1, 1, 1],
+      "center": [-74, 74],
+      "radius": 44
+    },
+    {
+      "id": "rightEyeWhite",
+      "type": "circle",
+      "color": [1, 1, 1, 1],
+      "center": [74, 74],
+      "radius": 44
+    },
+    {
+      "id": "leftPupil",
+      "type": "circle",
+      "color": [0.12, 0.09, 0.08, 1],
+      "center": [-74, 66],
+      "radius": 16
+    },
+    {
+      "id": "rightPupil",
+      "type": "circle",
+      "color": [0.12, 0.09, 0.08, 1],
+      "center": [74, 66],
+      "radius": 16
+    },
+    {
+      "id": "muzzle",
+      "type": "circle",
+      "color": [0.941, 0.808, 0.592, 1],
+      "center": [0, -18],
+      "radius": 105
+    },
+    {
+      "id": "nose",
+      "type": "circle",
+      "color": [0.329, 0.247, 0.169, 1],
+      "center": [0, 12],
+      "radius": 32
+    },
+    {
+      "id": "leftTooth",
+      "type": "polygon",
+      "color": [1, 1, 1, 1],
+      "points": [[-26, -54], [-2, -54], [-6, -89], [-26, -89]]
+    },
+    {
+      "id": "rightTooth",
+      "type": "polygon",
+      "color": [1, 1, 1, 1],
+      "points": [[2, -54], [26, -54], [26, -89], [6, -89]]
+    },
+    {
+      "id": "smile",
+      "type": "ringArc",
+      "color": [0.329, 0.247, 0.169, 1],
+      "center": [0, -25],
+      "innerRadius": 56,
+      "outerRadius": 69,
+      "startAngle": 3.56,
+      "endAngle": 5.87,
+      "segments": 44
+    },
+    {
+      "id": "hatBase",
+      "type": "polygon",
+      "color": [0.941, 0.788, 0.196, 1],
+      "points": [[-110, 244], [110, 244], [84, 188], [-84, 188]]
+    },
+    {
+      "id": "hatTop",
+      "type": "polygon",
+      "color": [0.953, 0.831, 0.298, 1],
+      "points": [[-46, 188], [46, 188], [28, 122], [-28, 122]]
+    },
+    {
+      "id": "hatBadge",
+      "type": "circle",
+      "color": [0.78, 0.2, 0.17, 1],
+      "center": [0, 156],
+      "radius": 14
+    },
+    {
+      "id": "leftArm",
+      "type": "polygon",
+      "color": [0.678, 0.451, 0.239, 1],
+      "points": [[-190, 10], [-132, -18], [-144, -70], [-214, -38]]
+    },
+    {
+      "id": "rightArm",
+      "type": "polygon",
+      "color": [0.678, 0.451, 0.239, 1],
+      "points": [[190, 10], [132, -18], [144, -70], [214, -38]]
+    }
+  ],
+  "instances": [
+    {
+      "position": [-250, 0],
+      "scale": 0.75,
+      "colorOverrides": {}
+    },
+    {
+      "position": [260, -20],
+      "scale": 0.58,
+      "colorOverrides": {
+        "hatBase": [0.941, 0.69, 0.149, 1],
+        "hatTop": [0.953, 0.757, 0.22, 1]
+      }
+    }
+  ]
+}
