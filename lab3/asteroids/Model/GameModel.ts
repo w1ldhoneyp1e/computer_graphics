@@ -46,14 +46,15 @@ type UpdateResult = {
 class GameModel {
 	private state: GameState
 	private lastBulletId = 0
+	private lastAsteroidId = 0
 	private shootCooldown = 0
 	private width: number
 	private height: number
 
 	constructor(width: number, height: number) {
-		this.state = this.initState()
 		this.width = width
 		this.height = height
+		this.state = this.initState()
 	}
 
 	getState(): GameState {
@@ -94,7 +95,7 @@ class GameModel {
 
 		return {
 			ship,
-			asteroids: spawnInitial(this.width, this.height, INITIAL_ASTEROIDS),
+			asteroids: spawnInitial(this.width, this.height, INITIAL_ASTEROIDS, this.lastAsteroidId),
 			bullets: [],
 			score: 0,
 			lives: LIVES_MAX,
@@ -218,8 +219,9 @@ class GameModel {
 				const smaller = this.nextSize(a.size)
 				if (smaller) {
 					result.soundHit = true
-					toAddAsteroids.push(createAsteroid(a.position, smaller))
+					toAddAsteroids.push(createAsteroid(this.lastAsteroidId, a.position, smaller))
 					toAddAsteroids.push(createAsteroid(
+						this.lastAsteroidId,
 						{
 							x: a.position.x + 8,
 							y: a.position.y,
@@ -275,8 +277,9 @@ class GameModel {
 		}
 		const smaller = this.nextSize(hit.size)
 		if (smaller) {
-			state.asteroids.push(createAsteroid(hit.position, smaller))
+			state.asteroids.push(createAsteroid(this.lastAsteroidId, hit.position, smaller))
 			state.asteroids.push(createAsteroid(
+				this.lastAsteroidId,
 				{
 					x: hit.position.x + 10,
 					y: hit.position.y,

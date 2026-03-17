@@ -11,8 +11,6 @@ import {
 	type Point,
 } from '../Shared/types'
 
-let nextId = 0
-
 function randomVertices(radius: number, numPoints: number): Point[] {
 	const verts: Point[] = []
 
@@ -49,12 +47,11 @@ function radiusForSize(size: AsteroidSize): number {
 	}
 }
 
-function createAsteroid(position: Point, size: AsteroidSize): Asteroid {
-	nextId += 1
+function createAsteroid(id: number, position: Point, size: AsteroidSize): Asteroid {
 	const radius = radiusForSize(size)
 
 	return {
-		id: nextId,
+		id,
 		position: {...position},
 		velocity: randomVelocity(),
 		angle: Math.random() * Math.PI * 2,
@@ -64,7 +61,7 @@ function createAsteroid(position: Point, size: AsteroidSize): Asteroid {
 	}
 }
 
-function spawnInitial(width: number, height: number, count: number): Asteroid[] {
+function spawnInitial(width: number, height: number, count: number, lastAsteroidId: number): Asteroid[] {
 	const list: Asteroid[] = []
 	const margin = 80
 
@@ -90,10 +87,13 @@ function spawnInitial(width: number, height: number, count: number): Asteroid[] 
 			y = Math.random() * height
 		}
 
-		list.push(createAsteroid({
-			x,
-			y,
-		}, 'big'))
+		list.push(createAsteroid(
+			i,
+			{
+				x,
+				y,
+			},
+			'big'))
 	}
 
 	return list
