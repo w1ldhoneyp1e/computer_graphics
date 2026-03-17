@@ -172,7 +172,7 @@ class GameModel {
 		}
 	}
 
-	private applyInput(state: GameState, input: Input, result: UpdateResult): void {
+	private handleInput(state: GameState, input: Input, result: UpdateResult): void {
 		const s = state.ship
 
 		s.thrust = input.up
@@ -302,10 +302,10 @@ class GameModel {
 		}
 
 		const {width, height} = state
-		const s = state.ship
+		const shipState = state.ship
 
-		this.applyInput(state, input, result)
-		this.updateShip(s, width, height)
+		this.handleInput(state, input, result)
+		this.updateShip(shipState, width, height)
 		this.updateBullets(state)
 		this.handleBulletAsteroidCollisions(state, result)
 		this.updateAsteroids(state)
