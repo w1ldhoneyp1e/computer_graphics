@@ -24,7 +24,7 @@ function getFixedBrowserGlobals() {
 
 export default [
 	{
-		files: ['**/*.{js,mjs,cjs,ts,jsx,tsx,json,yaml,yml}'],
+		files: ['**/*.{js,mjs,cjs,ts,jsx,tsx,yaml,yml}'],
 	},
 	{
 		ignores: [
@@ -45,6 +45,7 @@ export default [
 			'**/*.d.ts',
 
 			// Синхронизировать с .eslintignore
+			'public/scene.json',
 			'public/',
 			'vendor/',
 			'node_modules',

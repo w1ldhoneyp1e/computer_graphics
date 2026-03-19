@@ -1,11 +1,11 @@
 import {transformPoint} from '../math'
-import {type BuiltGeometry, type Primitive} from './Primitive'
 import {
 	type Color,
 	type RingArcCommand,
 	type SceneInstance,
 	type Vec2,
 } from '../types'
+import {type BuiltGeometry, type Primitive} from './Primitive'
 
 class RingArc implements Primitive {
 	readonly id: string

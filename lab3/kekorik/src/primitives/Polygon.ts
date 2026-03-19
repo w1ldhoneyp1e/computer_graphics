@@ -22,14 +22,8 @@ class Polygon implements Primitive {
 		const vertices: number[] = []
 		const count = this.points.length
 		if (count >= 3) {
-			const firstPoint = this.points[0]
-			if (!firstPoint) {
-				return {
-					id: this.id,
-					color: colorOverride ?? this.baseColor,
-					vertices: new Float32Array(vertices),
-				}
-			}
+			const firstPoint = this.points[0]!
+
 			const first = transformPoint(firstPoint, instance.position, instance.scale)
 			for (let i = 1; i < count - 1; i += 1) {
 				const secondPoint = this.points[i]
