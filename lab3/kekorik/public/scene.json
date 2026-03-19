@@ -1,137 +1,177 @@
 {
-  "background": [0.905, 0.973, 1, 1],
+  "background": [1, 1, 1, 1],
   "template": [
+    {
+      "id": "leftLeg",
+      "type": "circle",
+      "color": [0.933, 0.42, 0.231, 1],
+      "center": [-78, -265],
+      "radius": 66
+    },
+    {
+      "id": "rightLeg",
+      "type": "circle",
+      "color": [0.933, 0.42, 0.231, 1],
+      "center": [72, -265],
+      "radius": 66
+    },
     {
       "id": "body",
       "type": "circle",
-      "color": [0.678, 0.451, 0.239, 1],
-      "center": [0, 0],
-      "radius": 230
+      "color": [0.933, 0.42, 0.231, 1],
+      "center": [0, -20],
+      "radius": 236
+    },
+    {
+      "id": "belly",
+      "type": "circle",
+      "color": [0.949, 0.486, 0.286, 1],
+      "center": [-5, -78],
+      "radius": 164
     },
     {
       "id": "leftEar",
       "type": "circle",
-      "color": [0.678, 0.451, 0.239, 1],
-      "center": [-145, 170],
-      "radius": 45
+      "color": [0.933, 0.42, 0.231, 1],
+      "center": [-136, 154],
+      "radius": 42
     },
     {
       "id": "rightEar",
       "type": "circle",
-      "color": [0.678, 0.451, 0.239, 1],
-      "center": [145, 170],
-      "radius": 45
+      "color": [0.933, 0.42, 0.231, 1],
+      "center": [136, 154],
+      "radius": 42
     },
     {
-      "id": "leftEyeWhite",
-      "type": "circle",
-      "color": [1, 1, 1, 1],
-      "center": [-74, 74],
-      "radius": 44
+      "id": "leftArmRaised",
+      "type": "polygon",
+      "color": [0.933, 0.42, 0.231, 1],
+      "points": [[-174, 40], [-242, 122], [-270, 46], [-220, -8], [-164, -12]]
     },
     {
-      "id": "rightEyeWhite",
-      "type": "circle",
-      "color": [1, 1, 1, 1],
-      "center": [74, 74],
-      "radius": 44
-    },
-    {
-      "id": "leftPupil",
-      "type": "circle",
-      "color": [0.12, 0.09, 0.08, 1],
-      "center": [-74, 66],
-      "radius": 16
-    },
-    {
-      "id": "rightPupil",
-      "type": "circle",
-      "color": [0.12, 0.09, 0.08, 1],
-      "center": [74, 66],
-      "radius": 16
+      "id": "rightArmDown",
+      "type": "polygon",
+      "color": [0.933, 0.42, 0.231, 1],
+      "points": [[175, 10], [239, -8], [221, -106], [156, -76], [138, -12]]
     },
     {
       "id": "muzzle",
       "type": "circle",
-      "color": [0.941, 0.808, 0.592, 1],
-      "center": [0, -18],
-      "radius": 105
+      "color": [0.988, 0.596, 0.31, 1],
+      "center": [0, -12],
+      "radius": 102
     },
     {
       "id": "nose",
       "type": "circle",
-      "color": [0.329, 0.247, 0.169, 1],
-      "center": [0, 12],
-      "radius": 32
+      "color": [0.486, 0.149, 0.102, 1],
+      "center": [0, 16],
+      "radius": 38
+    },
+    {
+      "id": "leftMouthLine",
+      "type": "ringArc",
+      "color": [0.74, 0.27, 0.16, 1],
+      "center": [-56, -30],
+      "innerRadius": 43,
+      "outerRadius": 52,
+      "startAngle": 4.7,
+      "endAngle": 6.12,
+      "segments": 26
+    },
+    {
+      "id": "rightMouthLine",
+      "type": "ringArc",
+      "color": [0.74, 0.27, 0.16, 1],
+      "center": [56, -30],
+      "innerRadius": 43,
+      "outerRadius": 52,
+      "startAngle": 3.3,
+      "endAngle": 4.73,
+      "segments": 26
     },
     {
       "id": "leftTooth",
       "type": "polygon",
       "color": [1, 1, 1, 1],
-      "points": [[-26, -54], [-2, -54], [-6, -89], [-26, -89]]
+      "points": [[-20, -40], [-3, -40], [-5, -82], [-24, -82]]
     },
     {
       "id": "rightTooth",
       "type": "polygon",
       "color": [1, 1, 1, 1],
-      "points": [[2, -54], [26, -54], [26, -89], [6, -89]]
+      "points": [[3, -40], [20, -40], [24, -82], [5, -82]]
     },
     {
-      "id": "smile",
-      "type": "ringArc",
-      "color": [0.329, 0.247, 0.169, 1],
-      "center": [0, -25],
-      "innerRadius": 56,
-      "outerRadius": 69,
-      "startAngle": 3.56,
-      "endAngle": 5.87,
-      "segments": 44
-    },
-    {
-      "id": "hatBase",
+      "id": "hatBrim",
       "type": "polygon",
-      "color": [0.941, 0.788, 0.196, 1],
-      "points": [[-110, 244], [110, 244], [84, 188], [-84, 188]]
+      "color": [0.969, 0.718, 0.071, 1],
+      "points": [[-190, 182], [-132, 216], [6, 248], [164, 234], [208, 194], [130, 164], [-30, 152]]
     },
     {
       "id": "hatTop",
       "type": "polygon",
-      "color": [0.953, 0.831, 0.298, 1],
-      "points": [[-46, 188], [46, 188], [28, 122], [-28, 122]]
+      "color": [0.949, 0.639, 0.039, 1],
+      "points": [[-44, 188], [84, 198], [106, 154], [-18, 146], [-42, 170]]
+    },
+    {
+      "id": "glassesBlack",
+      "type": "polygon",
+      "color": [0.02, 0.02, 0.02, 1],
+      "points": [[-150, 122], [-130, 146], [-34, 160], [48, 156], [132, 128], [123, 95], [20, 86], [-86, 92]]
+    },
+    {
+      "id": "leftStarOuter",
+      "type": "polygon",
+      "color": [0.208, 0.714, 0.961, 1],
+      "points": [[-138, 118], [-111, 112], [-96, 90], [-82, 112], [-55, 120], [-76, 138], [-73, 165], [-97, 150], [-122, 161], [-116, 136]]
+    },
+    {
+      "id": "rightStarOuter",
+      "type": "polygon",
+      "color": [0.208, 0.714, 0.961, 1],
+      "points": [[14, 116], [41, 110], [56, 88], [70, 110], [98, 118], [76, 136], [80, 163], [55, 148], [29, 159], [35, 134]]
+    },
+    {
+      "id": "leftStarInner",
+      "type": "polygon",
+      "color": [1, 0.592, 0.592, 1],
+      "points": [[-126, 124], [-108, 120], [-97, 106], [-89, 121], [-72, 126], [-86, 137], [-84, 154], [-99, 145], [-115, 152], [-111, 135]]
+    },
+    {
+      "id": "rightStarInner",
+      "type": "polygon",
+      "color": [1, 0.592, 0.592, 1],
+      "points": [[26, 123], [44, 119], [55, 104], [63, 120], [80, 125], [66, 136], [68, 153], [53, 144], [37, 150], [41, 134]]
+    },
+    {
+      "id": "leftLegCut",
+      "type": "circle",
+      "color": [1, 1, 1, 1],
+      "center": [-80, -313],
+      "radius": 22
+    },
+    {
+      "id": "rightLegCut",
+      "type": "circle",
+      "color": [1, 1, 1, 1],
+      "center": [72, -313],
+      "radius": 22
     },
     {
       "id": "hatBadge",
       "type": "circle",
-      "color": [0.78, 0.2, 0.17, 1],
-      "center": [0, 156],
-      "radius": 14
-    },
-    {
-      "id": "leftArm",
-      "type": "polygon",
-      "color": [0.678, 0.451, 0.239, 1],
-      "points": [[-190, 10], [-132, -18], [-144, -70], [-214, -38]]
-    },
-    {
-      "id": "rightArm",
-      "type": "polygon",
-      "color": [0.678, 0.451, 0.239, 1],
-      "points": [[190, 10], [132, -18], [144, -70], [214, -38]]
+      "color": [0.808, 0.278, 0.149, 1],
+      "center": [30, 174],
+      "radius": 10
     }
   ],
   "instances": [
     {
-      "position": [-250, 0],
-      "scale": 0.75,
+      "position": [0, 20],
+      "scale": 0.88,
       "colorOverrides": {}
-    },
-    {
-      "position": [260, -20],
-      "scale": 0.58,
-      "colorOverrides": {
-        "hatBase": [0.941, 0.69, 0.149, 1],
-        "hatTop": [0.953, 0.757, 0.22, 1]
-      }
     }
   ]
 }

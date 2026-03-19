@@ -1,5 +1,5 @@
 import {worldToNdc} from './math'
-import type {Color, ViewBounds} from './types'
+import {type Color, type ViewBounds} from './types'
 
 const vertexShaderSource = `
 attribute vec2 a_position;
@@ -137,4 +137,6 @@ class WebGlRenderer {
 	}
 }
 
-export {WebGlRenderer}
+export {
+	WebGlRenderer,
+}

@@ -2,57 +2,57 @@ type Vec2 = [number, number]
 type Color = [number, number, number, number]
 
 type CircleCommand = {
-	id: string
-	type: 'circle'
-	color: Color
-	center: Vec2
-	radius: number
-	segments?: number
+	id: string,
+	type: 'circle',
+	color: Color,
+	center: Vec2,
+	radius: number,
+	segments?: number,
 }
 
 type PolygonCommand = {
-	id: string
-	type: 'polygon'
-	color: Color
-	points: Vec2[]
+	id: string,
+	type: 'polygon',
+	color: Color,
+	points: Vec2[],
 }
 
 type RingArcCommand = {
-	id: string
-	type: 'ringArc'
-	color: Color
-	center: Vec2
-	innerRadius: number
-	outerRadius: number
-	startAngle: number
-	endAngle: number
-	segments?: number
+	id: string,
+	type: 'ringArc',
+	color: Color,
+	center: Vec2,
+	innerRadius: number,
+	outerRadius: number,
+	startAngle: number,
+	endAngle: number,
+	segments?: number,
 }
 
 type PrimitiveCommand = CircleCommand | PolygonCommand | RingArcCommand
 
 type SceneInstance = {
-	position: Vec2
-	scale: number
-	colorOverrides: Record<string, Color>
+	position: Vec2,
+	scale: number,
+	colorOverrides: Record<string, Color>,
 }
 
 type SceneData = {
-	background: Color
-	template: PrimitiveCommand[]
-	instances: SceneInstance[]
+	background: Color,
+	template: PrimitiveCommand[],
+	instances: SceneInstance[],
 }
 
 type ViewBounds = {
-	left: number
-	right: number
-	bottom: number
-	top: number
+	left: number,
+	right: number,
+	bottom: number,
+	top: number,
 }
 
 type DragState = {
-	instanceIndex: number
-	offset: Vec2
+	instanceIndex: number,
+	offset: Vec2,
 }
 
 export type {

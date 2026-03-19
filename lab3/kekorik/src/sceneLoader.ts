@@ -1,4 +1,4 @@
-import type {SceneData} from './types'
+import {type SceneData} from './types'
 
 const isFiniteNumber = (value: unknown): value is number => {
 	const ok = typeof value === 'number' && Number.isFinite(value)

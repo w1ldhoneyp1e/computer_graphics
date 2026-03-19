@@ -19,13 +19,12 @@
     "noImplicitReturns": true,
     "noImplicitOverride": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "../lab3/kekorik",
+    "baseUrl": ".",
     "types": [
       "node"
     ]
   },
   "include": [
-    "../lab3/kekorik/src/**/*.ts",
-    "../lab3/kekorik/vite.config.ts"
+    "src/**/*.ts"
   ]
 }

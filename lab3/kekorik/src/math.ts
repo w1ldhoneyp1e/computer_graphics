@@ -1,4 +1,4 @@
-import type {Vec2, ViewBounds} from './types'
+import {type Vec2, type ViewBounds} from './types'
 
 const TAU = Math.PI * 2
 
