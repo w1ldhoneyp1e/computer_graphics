@@ -16,13 +16,6 @@ const createOrthoBounds = (width: number, height: number): ViewBounds => {
 	}
 }
 
-const worldToNdc = (x: number, y: number, view: ViewBounds): Vec2 => {
-	const nx = ((x - view.left) / (view.right - view.left)) * 2 - 1
-	const ny = ((y - view.bottom) / (view.top - view.bottom)) * 2 - 1
-
-	return [nx, ny]
-}
-
 const screenToWorld = (px: number, py: number, canvas: HTMLCanvasElement, view: ViewBounds): Vec2 => {
 	const x01 = px / canvas.width
 	const y01 = 1 - py / canvas.height
@@ -52,5 +45,4 @@ export {
 	distanceSquared,
 	screenToWorld,
 	transformPoint,
-	worldToNdc,
 }

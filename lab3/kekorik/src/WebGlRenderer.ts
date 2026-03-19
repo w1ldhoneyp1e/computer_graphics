@@ -1,13 +1,15 @@
-import {worldToNdc} from './math'
 import {type Color, type ViewBounds} from './types'
 
 const vertexShaderSource = `
 attribute vec2 a_position;
+uniform vec4 u_viewBounds;
 uniform vec4 u_color;
 varying vec4 v_color;
 
 void main() {
-	gl_Position = vec4(a_position, 0.0, 1.0);
+	float nx = ((a_position.x - u_viewBounds.x) / (u_viewBounds.y - u_viewBounds.x)) * 2.0 - 1.0;
+	float ny = ((a_position.y - u_viewBounds.z) / (u_viewBounds.w - u_viewBounds.z)) * 2.0 - 1.0;
+	gl_Position = vec4(nx, ny, 0.0, 1.0);
 	v_color = u_color;
 }
 `
@@ -27,6 +29,7 @@ class WebGlRenderer {
 	private readonly vertexBuffer: WebGLBuffer
 	private readonly positionLoc: number
 	private readonly colorLoc: WebGLUniformLocation
+	private readonly viewBoundsLoc: WebGLUniformLocation
 	private viewBounds: ViewBounds
 
 	constructor(gl: WebGLRenderingContext, initialViewBounds: ViewBounds) {
@@ -39,11 +42,13 @@ class WebGlRenderer {
 		this.vertexBuffer = buffer
 		const positionLoc = gl.getAttribLocation(this.program, 'a_position')
 		const colorLoc = gl.getUniformLocation(this.program, 'u_color')
-		if (positionLoc < 0 || !colorLoc) {
+		const viewBoundsLoc = gl.getUniformLocation(this.program, 'u_viewBounds')
+		if (positionLoc < 0 || !colorLoc || !viewBoundsLoc) {
 			throw new Error('Не удалось получить локации шейдера')
 		}
 		this.positionLoc = positionLoc
 		this.colorLoc = colorLoc
+		this.viewBoundsLoc = viewBoundsLoc
 		this.viewBounds = initialViewBounds
 		this.initializeState()
 	}
@@ -69,26 +74,20 @@ class WebGlRenderer {
 			return
 		}
 
-		const verticesInNdc = new Float32Array(verticesInWorld.length)
-		for (let i = 0; i < verticesInWorld.length; i += 2) {
-			const wx = verticesInWorld[i]
-			const wy = verticesInWorld[i + 1]
-			if (wx === undefined || wy === undefined) {
-				continue
-			}
-			const point = worldToNdc(wx, wy, this.viewBounds)
-			verticesInNdc[i] = point[0]
-			verticesInNdc[i + 1] = point[1]
-		}
-
 		const gl = this.gl
 		gl.useProgram(this.program)
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, verticesInNdc, gl.STATIC_DRAW)
+		gl.bufferData(gl.ARRAY_BUFFER, verticesInWorld, gl.STATIC_DRAW)
 		gl.enableVertexAttribArray(this.positionLoc)
 		gl.vertexAttribPointer(this.positionLoc, 2, gl.FLOAT, false, 0, 0)
 		gl.uniform4fv(this.colorLoc, color)
-		gl.drawArrays(gl.TRIANGLES, 0, verticesInNdc.length / 2)
+		gl.uniform4fv(this.viewBoundsLoc, [
+			this.viewBounds.left,
+			this.viewBounds.right,
+			this.viewBounds.bottom,
+			this.viewBounds.top,
+		])
+		gl.drawArrays(gl.TRIANGLES, 0, verticesInWorld.length / 2)
 	}
 
 	private createProgram(): WebGLProgram {
