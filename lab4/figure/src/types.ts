@@ -15,21 +15,22 @@ type DodecahedronGeometry = {
 	edgeIndices: Uint16Array,
 }
 
+type FigureScene = {
+	readonly geometry: DodecahedronGeometry,
+	readonly lightDirection: Vec3,
+}
+
 type OrbitCameraState = {
 	yaw: number,
 	pitch: number,
 	distance: number,
 }
 
-type OrbitCameraController = {
-	state: OrbitCameraState,
-}
-
 export {
 	type DodecahedronFace,
 	type DodecahedronGeometry,
+	type FigureScene,
 	type Mat4,
-	type OrbitCameraController,
 	type OrbitCameraState,
 	type Vec3,
 	type Vec4,

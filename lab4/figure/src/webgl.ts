@@ -1,10 +1,14 @@
-function createBuffer(gl: WebGLRenderingContext, target: number, data: BufferSource): WebGLBuffer {
+type CompatibleBufferSource = ArrayBufferLike | ArrayBufferView
+
+function createBuffer(gl: WebGLRenderingContext, target: number, data: CompatibleBufferSource): WebGLBuffer {
 	const buffer = gl.createBuffer()
 	if (!buffer) {
 		throw new Error('Не удалось создать буфер WebGL')
 	}
+
+	const uploadData = data as unknown as BufferSource
 	gl.bindBuffer(target, buffer)
-	gl.bufferData(target, data, gl.STATIC_DRAW)
+	gl.bufferData(target, uploadData, gl.STATIC_DRAW)
 
 	return buffer
 }
@@ -20,6 +24,7 @@ function createProgram(
 	if (!program) {
 		throw new Error('Не удалось создать программу WebGL')
 	}
+
 	gl.attachShader(program, vertexShader)
 	gl.attachShader(program, fragmentShader)
 	gl.linkProgram(program)
@@ -29,27 +34,11 @@ function createProgram(
 
 		throw new Error(info)
 	}
+
 	gl.deleteShader(vertexShader)
 	gl.deleteShader(fragmentShader)
 
 	return program
-}
-
-function compileShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
-	const shader = gl.createShader(type)
-	if (!shader) {
-		throw new Error('Не удалось создать шейдер')
-	}
-	gl.shaderSource(shader, source)
-	gl.compileShader(shader)
-	const isCompiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
-	if (!isCompiled) {
-		const info = gl.getShaderInfoLog(shader) ?? 'unknown shader compile error'
-
-		throw new Error(info)
-	}
-
-	return shader
 }
 
 function requireAttribLocation(gl: WebGLRenderingContext, program: WebGLProgram, name: string): number {
@@ -72,6 +61,24 @@ function requireUniformLocation(
 	}
 
 	return location
+}
+
+function compileShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader {
+	const shader = gl.createShader(type)
+	if (!shader) {
+		throw new Error('Не удалось создать шейдер')
+	}
+
+	gl.shaderSource(shader, source)
+	gl.compileShader(shader)
+	const isCompiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
+	if (!isCompiled) {
+		const info = gl.getShaderInfoLog(shader) ?? 'unknown shader compile error'
+
+		throw new Error(info)
+	}
+
+	return shader
 }
 
 export {
