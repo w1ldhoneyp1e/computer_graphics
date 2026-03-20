@@ -62,20 +62,20 @@ class GameController {
 		const result = this.model.step(this.input.state)
 		const state = result.state
 
-		if (result.soundShoot) {
+		if (result.shot) {
 			this.sound.playShoot()
 		}
-		if (result.soundHit) {
+		if (result.hit) {
 			this.sound.playHit()
 		}
-		if (result.soundDestroy) {
+		if (result.destroyed) {
 			this.sound.playDestroy()
 		}
-		if (result.soundShipExplode) {
+		if (result.shipExploded) {
 			this.sound.playShipExplode()
 		}
 
-		if (result.gameOver) {
+		if (result.gameOvered) {
 			this.gameOver = true
 			const again = window.confirm(`Игра окончена. Очки: ${state.score}. Начать заново?`)
 			if (again) {

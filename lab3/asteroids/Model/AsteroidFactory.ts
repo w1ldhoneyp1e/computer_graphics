@@ -61,7 +61,7 @@ function createAsteroid(id: number, position: Point, size: AsteroidSize): Astero
 	}
 }
 
-function spawnInitial(width: number, height: number, count: number, lastAsteroidId: number): Asteroid[] {
+function spawnInitial(width: number, height: number, count: number): Asteroid[] {
 	const list: Asteroid[] = []
 	const margin = 80
 

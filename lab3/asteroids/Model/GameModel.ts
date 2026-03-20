@@ -25,6 +25,7 @@ import {worldVertices} from '../Shared/utils'
 import {createAsteroid, spawnInitial} from './AsteroidFactory'
 
 const SHOOT_COOLDOWN = 15
+// Сделать по времени
 
 type GameState = {
 	ship: Ship,
@@ -36,11 +37,11 @@ type GameState = {
 
 type UpdateResult = {
 	state: GameState,
-	gameOver: boolean,
-	soundShoot: boolean,
-	soundHit: boolean,
-	soundDestroy: boolean,
-	soundShipExplode: boolean,
+	gameOvered: boolean,
+	shot: boolean,
+	hit: boolean,
+	destroyed: boolean,
+	shipExploded: boolean,
 }
 
 class GameModel {
@@ -92,10 +93,11 @@ class GameModel {
 
 	private initState(): GameState {
 		const ship = this.createShip()
+		this.lastAsteroidId = INITIAL_ASTEROIDS
 
 		return {
 			ship,
-			asteroids: spawnInitial(this.width, this.height, INITIAL_ASTEROIDS, this.lastAsteroidId),
+			asteroids: spawnInitial(this.width, this.height, INITIAL_ASTEROIDS),
 			bullets: [],
 			score: 0,
 			lives: LIVES_MAX,
@@ -186,7 +188,7 @@ class GameModel {
 		if (input.shoot && this.shootCooldown <= 0) {
 			this.shoot(state)
 			this.shootCooldown = SHOOT_COOLDOWN
-			result.soundShoot = true
+			result.shot = true
 		}
 	}
 
@@ -218,8 +220,9 @@ class GameModel {
 				state.score += this.scoreForSize(a.size)
 				const smaller = this.nextSize(a.size)
 				if (smaller) {
-					result.soundHit = true
+					result.hit = true
 					toAddAsteroids.push(createAsteroid(this.lastAsteroidId, a.position, smaller))
+					this.lastAsteroidId++
 					toAddAsteroids.push(createAsteroid(
 						this.lastAsteroidId,
 						{
@@ -228,9 +231,10 @@ class GameModel {
 						},
 						smaller,
 					))
+					this.lastAsteroidId++
 				}
 				else {
-					result.soundDestroy = true
+					result.destroyed = true
 				}
 				toRemoveAsteroids.add(a.id)
 				break
@@ -261,7 +265,7 @@ class GameModel {
 		let hitAsteroidId: number | null = null
 		for (const a of state.asteroids) {
 			if (polygonOverlapsPolygon(s, a)) {
-				result.soundShipExplode = true
+				result.shipExploded = true
 				state.lives -= 1
 				state.ship = this.createShip()
 				hitAsteroidId = a.id
@@ -278,6 +282,7 @@ class GameModel {
 		const smaller = this.nextSize(hit.size)
 		if (smaller) {
 			state.asteroids.push(createAsteroid(this.lastAsteroidId, hit.position, smaller))
+			this.lastAsteroidId++
 			state.asteroids.push(createAsteroid(
 				this.lastAsteroidId,
 				{
@@ -286,6 +291,7 @@ class GameModel {
 				},
 				smaller,
 			))
+			this.lastAsteroidId++
 		}
 		state.asteroids = state.asteroids.filter(a => a.id !== hitAsteroidId)
 	}
@@ -293,11 +299,11 @@ class GameModel {
 	private update(state: GameState, input: Input): UpdateResult {
 		const result: UpdateResult = {
 			state,
-			gameOver: false,
-			soundShoot: false,
-			soundHit: false,
-			soundDestroy: false,
-			soundShipExplode: false,
+			gameOvered: false,
+			shot: false,
+			hit: false,
+			destroyed: false,
+			shipExploded: false,
 		}
 
 		const {width, height} = this
@@ -311,7 +317,7 @@ class GameModel {
 		this.handleShipAsteroidCollisions(state, result)
 
 		if (state.lives <= 0) {
-			result.gameOver = true
+			result.gameOvered = true
 		}
 
 		return result

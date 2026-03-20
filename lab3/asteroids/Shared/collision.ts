@@ -38,6 +38,7 @@ function pointInTriangle(p: Point, a: Point, b: Point, c: Point): boolean {
 	return (s1 >= 0 && s2 >= 0 && s3 >= 0) || (s1 <= 0 && s2 <= 0 && s3 <= 0)
 }
 
+// Исправить колиизии: учесть, что вершина может быть не внутри другого треугольника
 function pointInPolygon(point: Point, worldVerts: Point[]): boolean {
 	const n = worldVerts.length
 	if (n < 3) {
