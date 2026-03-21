@@ -22,8 +22,6 @@ class KekorikModel {
 		this.primitives = buildPrimitiveSet(scene.template)
 		this.instances = scene.instances.map(instance => ({
 			position: [instance.position[0], instance.position[1]],
-			scale: instance.scale,
-			colorOverrides: {...instance.colorOverrides},
 		}))
 	}
 
@@ -57,7 +55,7 @@ class KekorikModel {
 			if (!instance) {
 				continue
 			}
-			const radius = HIT_RADIUS * instance.scale
+			const radius = HIT_RADIUS
 			const hit = distanceSquared(point, instance.position) <= radius * radius
 			if (hit) {
 				return i

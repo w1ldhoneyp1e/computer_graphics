@@ -25,9 +25,9 @@ const screenToWorld = (px: number, py: number, canvas: HTMLCanvasElement, view: 
 	return [wx, wy]
 }
 
-const transformPoint = (point: Vec2, position: Vec2, scale: number): Vec2 => {
-	const x = point[0] * scale + position[0]
-	const y = point[1] * scale + position[1]
+const transformPoint = (point: Vec2, position: Vec2): Vec2 => {
+	const x = point[0] + position[0]
+	const y = point[1] + position[1]
 
 	return [x, y]
 }

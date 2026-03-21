@@ -28,10 +28,10 @@ class RingArc implements Primitive {
 		this.segments = data.segments ?? 24
 	}
 
-	build(instance: SceneInstance, colorOverride?: Color): BuiltGeometry {
-		const center = transformPoint(this.center, instance.position, instance.scale)
-		const inner = this.innerRadius * instance.scale
-		const outer = this.outerRadius * instance.scale
+	build(instance: SceneInstance): BuiltGeometry {
+		const center = transformPoint(this.center, instance.position)
+		const inner = this.innerRadius
+		const outer = this.outerRadius
 		const vertices: number[] = []
 
 		for (let i = 0; i < this.segments; i += 1) {
@@ -47,7 +47,7 @@ class RingArc implements Primitive {
 
 		return {
 			id: this.id,
-			color: colorOverride ?? this.baseColor,
+			color: this.baseColor,
 			vertices: new Float32Array(vertices),
 		}
 	}

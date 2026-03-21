@@ -22,9 +22,9 @@ class Circle implements Primitive {
 		this.segments = data.segments ?? 52
 	}
 
-	build(instance: SceneInstance, colorOverride?: Color): BuiltGeometry {
-		const center = transformPoint(this.center, instance.position, instance.scale)
-		const radius = this.radius * instance.scale
+	build(instance: SceneInstance): BuiltGeometry {
+		const center = transformPoint(this.center, instance.position)
+		const radius = this.radius
 		const vertices: number[] = []
 
 		for (let i = 0; i < this.segments; i += 1) {
@@ -39,7 +39,7 @@ class Circle implements Primitive {
 
 		return {
 			id: this.id,
-			color: colorOverride ?? this.baseColor,
+			color: this.baseColor,
 			vertices: new Float32Array(vertices),
 		}
 	}

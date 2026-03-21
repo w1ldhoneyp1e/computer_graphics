@@ -62,8 +62,7 @@ class KekorikView {
 		this.renderer.clear()
 		for (const instance of instances) {
 			for (const primitive of primitives) {
-				const overrideColor = instance.colorOverrides[primitive.id]
-				const built = primitive.build(instance, overrideColor)
+				const built = primitive.build(instance)
 				this.renderer.drawTriangles(built.vertices, built.color)
 			}
 		}

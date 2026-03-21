@@ -33,8 +33,6 @@ type PrimitiveCommand = CircleCommand | PolygonCommand | RingArcCommand
 
 type SceneInstance = {
 	position: Vec2,
-	scale: number,
-	colorOverrides: Record<string, Color>,
 }
 
 type SceneData = {

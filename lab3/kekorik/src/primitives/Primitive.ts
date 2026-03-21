@@ -9,7 +9,7 @@ type BuiltGeometry = {
 type Primitive = {
 	id: string,
 	baseColor: Color,
-	build: (instance: SceneInstance, colorOverride?: Color) => BuiltGeometry,
+	build: (instance: SceneInstance) => BuiltGeometry,
 }
 
 export type {
