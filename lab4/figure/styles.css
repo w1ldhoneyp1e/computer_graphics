@@ -15,17 +15,3 @@ body {
 	display: block;
 	touch-action: none;
 }
-
-#hud {
-	position: fixed;
-	left: 12px;
-	top: 12px;
-	color: #dbe5ff;
-	background: rgba(10, 14, 28, 0.55);
-	border: 1px solid rgba(219, 229, 255, 0.2);
-	padding: 8px 10px;
-	border-radius: 8px;
-	font-size: 13px;
-	line-height: 1.4;
-	pointer-events: none;
-}
