@@ -2,6 +2,8 @@ type Vec3 = [number, number, number]
 type Vec4 = [number, number, number, number]
 type Mat4 = Float32Array
 
+type Edge = `${number}-${number}`
+
 type FigureFace = {
 	indices: Uint16Array,
 	normal: Vec3,
@@ -34,4 +36,5 @@ export {
 	type OrbitCameraState,
 	type Vec3,
 	type Vec4,
+	type Edge,
 }

@@ -6,11 +6,13 @@ import {
 	vec3Subtract,
 } from './math'
 import {
+	type Edge,
 	type FigureGeometry,
 	type FigureScene,
 	type Vec3,
 	type Vec4,
 } from './types'
+
 
 type OctahedronSceneConstructorType = {
 	scale?: number,
@@ -60,20 +62,27 @@ class OctahedronScene implements FigureScene {
 		]
 	}
 
-	private static makeEdgeKey(a: number, b: number): string {
+	private static getFaceColorByIndex(index: number) {
+		return OctahedronScene.FACE_PALETTE[index % OctahedronScene.FACE_PALETTE.length]!
+	}
+
+	private static makeEdgeKey(a: number, b: number): Edge {
 		return a < b
 			? `${a}-${b}`
 			: `${b}-${a}`
 	}
 
+	private static getVerticesFromEdge(edge: Edge): [number, number] {
+		const [a, b] = edge.split('-')
+		return [Number(a), Number(b)]
+	}
+
 	private static createOctahedronGeometry(scale = 1.6): FigureGeometry {
 		const octaVertices = OctahedronScene.createOctahedronVertices()
 		const octaFaces = OctahedronScene.createOctahedronFaces()
-		const edgeSet = new Set<string>()
-		const faces: FigureGeometry['faces'] = []
+		const edgeSet = new Set<Edge>()
 
-		for (let faceIndex = 0; faceIndex < octaFaces.length; faceIndex++) {
-			const face = octaFaces[faceIndex]!
+		const faces: FigureGeometry['faces'] = octaFaces.map((face, index) => {
 			const a = octaVertices[face[0]!]!
 			const b = octaVertices[face[1]!]!
 			const c = octaVertices[face[2]!]!
@@ -85,33 +94,29 @@ class OctahedronScene implements FigureScene {
 				))
 			}
 
-			faces.push({
+			const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
+			const verticesSum = face.reduce<Vec3>(
+				(acc, vertexId) => vec3Add(acc, octaVertices[vertexId]!),
+				[0, 0, 0],
+			)
+
+			return {
 				indices: new Uint16Array(face),
-				normal: vec3Normalize(vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))),
-				center: vec3Scale(face.reduce<Vec3>(
-					(acc, vertexId) => vec3Add(acc, octaVertices[vertexId]!), [0, 0, 0],
-				), 1 / face.length),
-				color: OctahedronScene.FACE_PALETTE[faceIndex % OctahedronScene.FACE_PALETTE.length]!,
-			})
-		}
-
-		const edgeIndicesArray: number[] = []
-		for (const edgeKey of edgeSet) {
-			const [a, b] = edgeKey.split('-').map(part => Number(part))
-			if (a === undefined || b === undefined) {
-				continue
+				normal: vec3Normalize(cross),
+				center: vec3Scale(verticesSum, 1 / face.length),
+				color: OctahedronScene.getFaceColorByIndex(index),
 			}
+		})
 
-			edgeIndicesArray.push(a, b)
-		}
+		const edgeIndicesArray: number[] = [...edgeSet].flatMap(
+			edge => OctahedronScene.getVerticesFromEdge(edge),
+		)
 
-		const scaledVertices = new Float32Array(octaVertices.length * 3)
-		for (let i = 0; i < octaVertices.length; i++) {
-			const vertex = octaVertices[i]!
-			scaledVertices[i * 3] = vertex[0] * scale
-			scaledVertices[i * 3 + 1] = vertex[1] * scale
-			scaledVertices[i * 3 + 2] = vertex[2] * scale
-		}
+		const scaledVertices = new Float32Array(octaVertices.flatMap(vec3 => [
+			vec3[0] * scale,
+			vec3[1] * scale,
+			vec3[2] * scale,
+		]))
 
 		return {
 			vertices: scaledVertices,
