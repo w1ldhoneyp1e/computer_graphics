@@ -2,21 +2,21 @@ type Vec3 = [number, number, number]
 type Vec4 = [number, number, number, number]
 type Mat4 = Float32Array
 
-type DodecahedronFace = {
+type FigureFace = {
 	indices: Uint16Array,
 	normal: Vec3,
 	center: Vec3,
 	color: Vec4,
 }
 
-type DodecahedronGeometry = {
+type FigureGeometry = {
 	vertices: Float32Array,
-	faces: DodecahedronFace[],
+	faces: FigureFace[],
 	edgeIndices: Uint16Array,
 }
 
 type FigureScene = {
-	readonly geometry: DodecahedronGeometry,
+	readonly geometry: FigureGeometry,
 	readonly lightDirection: Vec3,
 }
 
@@ -27,8 +27,8 @@ type OrbitCameraState = {
 }
 
 export {
-	type DodecahedronFace,
-	type DodecahedronGeometry,
+	type FigureFace,
+	type FigureGeometry,
 	type FigureScene,
 	type Mat4,
 	type OrbitCameraState,
