@@ -95,7 +95,7 @@ class FigureRenderer {
 		}
 
 		this.gl.enable(this.gl.DEPTH_TEST)
-		this.gl.clearColor(0.08, 0.1, 0.16, 1)
+		this.gl.clearColor(0.80, 0.80, 0.80, 1)
 	}
 
 	private drawEdges(mvp: Float32Array): void {
