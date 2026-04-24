@@ -29,17 +29,6 @@ class MobiusStripScene implements FigureScene {
 	readonly geometry: FigureGeometry
 	readonly lightDirection: Vec3
 
-	private static readonly FACE_PALETTE: Vec4[] = [
-		[0.93, 0.25, 0.25, 0.44],
-		[0.25, 0.82, 0.42, 0.44],
-		[0.23, 0.55, 0.95, 0.44],
-		[0.95, 0.75, 0.22, 0.44],
-		[0.85, 0.36, 0.78, 0.44],
-		[0.20, 0.78, 0.82, 0.44],
-		[0.96, 0.52, 0.16, 0.44],
-		[0.56, 0.42, 0.92, 0.44],
-	]
-
 	constructor({
 		scale = 1.6,
 		lightDirection = [-5, -5, -5],
@@ -56,8 +45,20 @@ class MobiusStripScene implements FigureScene {
 		this.lightDirection = lightDirection
 	}
 
-	private static getFaceColorByIndex(index: number): Vec4 {
-		return MobiusStripScene.FACE_PALETTE[index % MobiusStripScene.FACE_PALETTE.length]!
+	private static getFaceColorByY(y: number, minY: number, maxY: number): Vec4 {
+		const zRange = maxY - minY
+		const percent = zRange === 0
+			? 0.5
+			: (y - minY) / zRange
+
+		const mix = (from: number, to: number): number => from + (to - from) * percent
+
+		return [
+			mix(0.18, 0.88),
+			mix(0.44, 0.70),
+			mix(0.78, 0.96),
+			0.82,
+		]
 	}
 
 	private static makeEdgeKey(a: number, b: number): Edge {
@@ -75,26 +76,28 @@ class MobiusStripScene implements FigureScene {
 		const radius = 1 + (v / 2) * Math.cos(u / 2)
 
 		return [
-			scale * 0.8 * radius * Math.cos(u),
-			scale * 1.5 * radius * Math.sin(u),
-			scale * 0.8 * (v / 2) * Math.sin(u / 2),
+			scale * radius * Math.cos(u),
+			scale * radius * Math.sin(u),
+			scale * (v / 2) * Math.sin(u / 2),
 		]
 	}
 
 	private static createTriangleFace(
 		points: Vec3[],
 		indices: [number, number, number],
-		color: Vec4,
+		minY: number,
+		maxY: number,
 	): FigureFace {
 		const a = points[indices[0]]
 		const b = points[indices[1]]
 		const c = points[indices[2]]
 		const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
+		const averageY = (a[1] + b[1] + c[1]) / 3
 
 		return {
 			indices: new Uint16Array(indices),
 			normal: vec3Normalize(cross),
-			color,
+			color: MobiusStripScene.getFaceColorByY(averageY, minY, maxY),
 		}
 	}
 
@@ -119,14 +122,17 @@ class MobiusStripScene implements FigureScene {
 			}
 		}
 
+		const yValues = points.map(([, y]) => y)
+		const minY = Math.min(...yValues)
+		const maxY = Math.max(...yValues)
+
 		const addQuad = (args: {
 			a: number,
 			b: number,
 			c: number,
 			d: number,
-			quadIndex: number,
 		}): void => {
-			const {a, b, c, d, quadIndex} = args
+			const {a, b, c, d} = args
 			edgeSet.add(MobiusStripScene.makeEdgeKey(a, b))
 			edgeSet.add(MobiusStripScene.makeEdgeKey(b, d))
 			edgeSet.add(MobiusStripScene.makeEdgeKey(d, c))
@@ -136,17 +142,18 @@ class MobiusStripScene implements FigureScene {
 				MobiusStripScene.createTriangleFace(
 					points,
 					[a, c, b],
-					MobiusStripScene.getFaceColorByIndex(quadIndex * 2),
+					minY,
+					maxY,
 				),
 				MobiusStripScene.createTriangleFace(
 					points,
 					[b, c, d],
-					MobiusStripScene.getFaceColorByIndex(quadIndex * 2 + 1),
+					minY,
+					maxY,
 				),
 			)
 		}
 
-		let quadIndex = 0
 		for (let i = 0; i < uSegments - 1; i++) {
 			for (let j = 0; j < vSegments; j++) {
 				const a = index(i, j)
@@ -154,8 +161,7 @@ class MobiusStripScene implements FigureScene {
 				const c = index(i, j + 1)
 				const d = index(i + 1, j + 1)
 
-				addQuad({a, b, c, d, quadIndex})
-				quadIndex += 1
+				addQuad({a, b, c, d})
 			}
 		}
 
@@ -164,8 +170,7 @@ class MobiusStripScene implements FigureScene {
 			const c = index(uSegments - 1, j + 1)
 			const b = index(0, vSegments - j)
 			const d = index(0, vSegments - (j + 1))
-			addQuad({a, b, c, d, quadIndex})
-			quadIndex += 1
+			addQuad({a, b, c, d})
 		}
 
 		const vertices = new Float32Array(
