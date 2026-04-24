@@ -34,7 +34,7 @@ class OctahedronScene implements FigureScene {
 
 	constructor({
 		scale = 1.6,
-		lightDirection = [0.8, 1.3, 0.5],
+		lightDirection = [-5, -5, -5],
 	}: OctahedronSceneConstructorType = {}) {
 		this.geometry = OctahedronScene.createOctahedronGeometry(scale)
 		this.lightDirection = lightDirection
