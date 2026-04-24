@@ -7,7 +7,6 @@ type Edge = `${number}-${number}`
 type FigureFace = {
 	indices: Uint16Array,
 	normal: Vec3,
-	center: Vec3,
 	color: Vec4,
 }
 

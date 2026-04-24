@@ -1,8 +1,6 @@
 import {
-	vec3Add,
 	vec3Cross,
 	vec3Normalize,
-	vec3Scale,
 	vec3Subtract,
 } from './math'
 import {
@@ -99,15 +97,10 @@ class OctahedronScene implements FigureScene {
 			}
 
 			const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
-			const verticesSum = face.reduce<Vec3>(
-				(acc, vertexId) => vec3Add(acc, octaVertices[vertexId]!),
-				[0, 0, 0],
-			)
 
 			return {
 				indices: new Uint16Array(face),
 				normal: vec3Normalize(cross),
-				center: vec3Scale(verticesSum, 1 / face.length),
 				color: OctahedronScene.getFaceColorByIndex(index),
 			}
 		})
