@@ -1,0 +1,128 @@
+import {
+	vec3Cross,
+	vec3Normalize,
+	vec3Subtract,
+} from './math'
+import {
+	type Edge,
+	type FigureGeometry,
+	type FigureScene,
+	type Vec3,
+	type Vec4,
+} from './types'
+
+
+type MobiusStripSceneConstructorType = {
+	scale?: number,
+	lightDirection?: Vec3,
+}
+
+class MobiusStripScene implements FigureScene {
+	readonly geometry: FigureGeometry
+	readonly lightDirection: Vec3
+
+	private static readonly FACE_PALETTE: Vec4[] = [
+		[0.93, 0.25, 0.25, 0.44],
+		[0.25, 0.82, 0.42, 0.44],
+		[0.23, 0.55, 0.95, 0.44],
+		[0.95, 0.75, 0.22, 0.44],
+		[0.85, 0.36, 0.78, 0.44],
+		[0.20, 0.78, 0.82, 0.44],
+		[0.96, 0.52, 0.16, 0.44],
+		[0.56, 0.42, 0.92, 0.44],
+	]
+
+	constructor({
+		scale = 1.6,
+		lightDirection = [-5, -5, -5],
+	}: MobiusStripSceneConstructorType = {}) {
+		this.geometry = MobiusStripScene.createOctahedronGeometry(scale)
+		this.lightDirection = lightDirection
+	}
+
+	private static createOctahedronVertices(): Vec3[] {
+		return [
+			[1, 0, 0],
+			[-1, 0, 0],
+			[0, 1, 0],
+			[0, -1, 0],
+			[0, 0, 1],
+			[0, 0, -1],
+		]
+	}
+
+	private static createOctahedronFaces(): number[][] {
+		return [
+			[0, 2, 4],
+			[2, 1, 4],
+			[1, 3, 4],
+			[3, 0, 4],
+			[2, 0, 5],
+			[1, 2, 5],
+			[3, 1, 5],
+			[0, 3, 5],
+		]
+	}
+
+	private static getFaceColorByIndex(index: number) {
+		return MobiusStripScene.FACE_PALETTE[index % MobiusStripScene.FACE_PALETTE.length]!
+	}
+
+	private static makeEdgeKey(a: number, b: number): Edge {
+		return a < b
+			? `${a}-${b}`
+			: `${b}-${a}`
+	}
+
+	private static getVerticesFromEdge(edge: Edge): [number, number] {
+		const [a, b] = edge.split('-')
+		return [Number(a), Number(b)]
+	}
+
+	private static createOctahedronGeometry(scale = 1.6): FigureGeometry {
+		const octaVertices = MobiusStripScene.createOctahedronVertices()
+		const octaFaces = MobiusStripScene.createOctahedronFaces()
+		const edgeSet = new Set<Edge>()
+
+		const faces: FigureGeometry['faces'] = octaFaces.map((face, index) => {
+			const a = octaVertices[face[0]!]!
+			const b = octaVertices[face[1]!]!
+			const c = octaVertices[face[2]!]!
+
+			for (let i = 0; i < face.length; i++) {
+				edgeSet.add(MobiusStripScene.makeEdgeKey(
+					face[i]!,
+					face[(i + 1) % face.length]!,
+				))
+			}
+
+			const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
+
+			return {
+				indices: new Uint16Array(face),
+				normal: vec3Normalize(cross),
+				color: MobiusStripScene.getFaceColorByIndex(index),
+			}
+		})
+
+		const edgeIndicesArray: number[] = [...edgeSet].flatMap(
+			edge => MobiusStripScene.getVerticesFromEdge(edge),
+		)
+
+		const scaledVertices = new Float32Array(octaVertices.flatMap(vec3 => [
+			vec3[0] * scale,
+			vec3[1] * scale,
+			vec3[2] * scale,
+		]))
+
+		return {
+			vertices: scaledVertices,
+			faces,
+			edgeIndices: new Uint16Array(edgeIndicesArray),
+		}
+	}
+}
+
+export {
+	MobiusStripScene,
+}
