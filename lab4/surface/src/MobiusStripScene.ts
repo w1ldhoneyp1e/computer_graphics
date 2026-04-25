@@ -11,7 +11,6 @@ import {
 	type FigureGeometry,
 	type FigureScene,
 	type Vec3,
-	type Vec4,
 } from './types'
 
 type CreateMobiusStripSceneArgs = {
@@ -45,22 +44,6 @@ class MobiusStripScene implements FigureScene {
 		this.lightDirection = lightDirection
 	}
 
-	private static getFaceColorByY(y: number, minY: number, maxY: number): Vec4 {
-		const zRange = maxY - minY
-		const percent = zRange === 0
-			? 0.5
-			: (y - minY) / zRange
-
-		const mix = (from: number, to: number): number => from + (to - from) * percent
-
-		return [
-			mix(0.18, 0.88),
-			mix(0.44, 0.70),
-			mix(0.78, 0.96),
-			0.82,
-		]
-	}
-
 	private static makeEdgeKey(a: number, b: number): Edge {
 		return a < b
 			? `${a}-${b}`
@@ -82,23 +65,23 @@ class MobiusStripScene implements FigureScene {
 		]
 	}
 
-	private static createTriangleFace(
-		points: Vec3[],
-		indices: [number, number, number],
-		minY: number,
-		maxY: number,
-	): FigureFace {
-		const a = points[indices[0]]
-		const b = points[indices[1]]
-		const c = points[indices[2]]
-		const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
-		const averageY = (a[1] + b[1] + c[1]) / 3
-
+	private static createTriangleFace(indices: [number, number, number]): FigureFace {
 		return {
 			indices: new Uint16Array(indices),
-			normal: vec3Normalize(cross),
-			color: MobiusStripScene.getFaceColorByY(averageY, minY, maxY),
 		}
+	}
+
+	private static createSurfaceNormal(u: number, v: number, scale: number): Vec3 {
+		const delta = 0.0005
+		const uTangent = vec3Subtract(
+			MobiusStripScene.createSurfacePoint(u + delta, v, scale),
+			MobiusStripScene.createSurfacePoint(u - delta, v, scale),
+		)
+		const vTangent = vec3Subtract(
+			MobiusStripScene.createSurfacePoint(u, v + delta, scale),
+			MobiusStripScene.createSurfacePoint(u, v - delta, scale),
+		)
+		return vec3Normalize(vec3Cross(uTangent, vTangent))
 	}
 
 	private static createMobiusStripGeometry({
@@ -108,6 +91,7 @@ class MobiusStripScene implements FigureScene {
 		stripWidth,
 	}: CreateMobiusStripSceneArgs): FigureGeometry {
 		const points: Vec3[] = []
+		const normals: Vec3[] = []
 		const edgeSet = new Set<Edge>()
 		const faces: FigureFace[] = []
 
@@ -119,6 +103,7 @@ class MobiusStripScene implements FigureScene {
 			for (let j = 0; j <= vSegments; j++) {
 				const v = -(stripWidth / 2) + (stripWidth * j) / vSegments
 				points.push(MobiusStripScene.createSurfacePoint(u, v, scale))
+				normals.push(MobiusStripScene.createSurfaceNormal(u, v, scale))
 			}
 		}
 
@@ -139,18 +124,8 @@ class MobiusStripScene implements FigureScene {
 			edgeSet.add(MobiusStripScene.makeEdgeKey(c, a))
 
 			faces.push(
-				MobiusStripScene.createTriangleFace(
-					points,
-					[a, c, b],
-					minY,
-					maxY,
-				),
-				MobiusStripScene.createTriangleFace(
-					points,
-					[b, c, d],
-					minY,
-					maxY,
-				),
+				MobiusStripScene.createTriangleFace([a, c, b]),
+				MobiusStripScene.createTriangleFace([b, c, d]),
 			)
 		}
 
@@ -176,6 +151,9 @@ class MobiusStripScene implements FigureScene {
 		const vertices = new Float32Array(
 			points.flatMap(point => point),
 		)
+		const smoothNormals = new Float32Array(
+			normals.flatMap(normal => normal),
+		)
 
 		const edgeIndicesArray: number[] = [...edgeSet].flatMap(
 			edge => MobiusStripScene.getVerticesFromEdge(edge),
@@ -183,8 +161,11 @@ class MobiusStripScene implements FigureScene {
 
 		return {
 			vertices,
+			normals: smoothNormals,
 			faces,
 			edgeIndices: new Uint16Array(edgeIndicesArray),
+			minY,
+			maxY,
 		}
 	}
 }

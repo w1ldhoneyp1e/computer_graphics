@@ -1,17 +1,8 @@
 import {resizeCanvasToDisplaySize} from './canvas'
 import {createMvpMatrix} from './math'
 import {type OrbitCamera} from './OrbitCamera'
-import {
-	EDGE_FRAGMENT_SHADER,
-	EDGE_VERTEX_SHADER,
-	FACE_FRAGMENT_SHADER,
-	FACE_VERTEX_SHADER,
-} from './shaders'
-import {
-	type FigureScene,
-	type Vec3,
-	type Vec4,
-} from './types'
+import {FACE_FRAGMENT_SHADER, FACE_VERTEX_SHADER} from './shaders'
+import {type FigureScene} from './types'
 import {
 	createBuffer,
 	createProgram,
@@ -22,23 +13,16 @@ import {
 type FaceRenderData = {
 	indexBuffer: WebGLBuffer,
 	indexCount: number,
-	normal: Vec3,
-	color: Vec4,
-}
-
-type EdgeResources = {
-	program: WebGLProgram,
-	positionLocation: number,
-	mvpLocation: WebGLUniformLocation,
 }
 
 type FaceResources = {
 	program: WebGLProgram,
 	positionLocation: number,
+	normalLocation: number,
 	mvpLocation: WebGLUniformLocation,
-	normalLocation: WebGLUniformLocation,
-	colorLocation: WebGLUniformLocation,
 	lightDirectionLocation: WebGLUniformLocation,
+	minYLocation: WebGLUniformLocation,
+	maxYLocation: WebGLUniformLocation,
 }
 
 type FigureRendererDeps = {
@@ -52,10 +36,9 @@ class FigureRenderer {
 	private readonly gl: WebGLRenderingContext
 	private readonly scene: FigureScene
 	private readonly vertexBuffer: WebGLBuffer
-	private readonly edgeIndexBuffer: WebGLBuffer
+	private readonly normalBuffer: WebGLBuffer
 	private readonly faceRenderData: FaceRenderData[]
 	private readonly face: FaceResources
-	private readonly edge: EdgeResources
 
 	constructor({
 		canvas,
@@ -67,62 +50,34 @@ class FigureRenderer {
 		this.scene = scene
 
 		this.vertexBuffer = createBuffer(this.gl, this.gl.ARRAY_BUFFER, scene.geometry.vertices)
-		this.edgeIndexBuffer = createBuffer(this.gl, this.gl.ELEMENT_ARRAY_BUFFER, scene.geometry.edgeIndices)
+		this.normalBuffer = createBuffer(this.gl, this.gl.ARRAY_BUFFER, scene.geometry.normals)
 
 		this.faceRenderData = scene.geometry.faces.map(face => ({
 			indexBuffer: createBuffer(this.gl, this.gl.ELEMENT_ARRAY_BUFFER, face.indices),
 			indexCount: face.indices.length,
-			normal: face.normal,
-			color: face.color,
 		}))
 
 		const faceProgram = createProgram(this.gl, FACE_VERTEX_SHADER, FACE_FRAGMENT_SHADER)
-		const edgeProgram = createProgram(this.gl, EDGE_VERTEX_SHADER, EDGE_FRAGMENT_SHADER)
 
 		this.face = {
 			program: faceProgram,
 			positionLocation: requireAttribLocation(this.gl, faceProgram, 'a_position'),
+			normalLocation: requireAttribLocation(this.gl, faceProgram, 'a_normal'),
 			mvpLocation: requireUniformLocation(this.gl, faceProgram, 'u_mvp'),
-			normalLocation: requireUniformLocation(this.gl, faceProgram, 'u_normal'),
-			colorLocation: requireUniformLocation(this.gl, faceProgram, 'u_color'),
 			lightDirectionLocation: requireUniformLocation(this.gl, faceProgram, 'u_lightDir'),
-		}
-
-		this.edge = {
-			program: edgeProgram,
-			positionLocation: requireAttribLocation(this.gl, edgeProgram, 'a_position'),
-			mvpLocation: requireUniformLocation(this.gl, edgeProgram, 'u_mvp'),
+			minYLocation: requireUniformLocation(this.gl, faceProgram, 'u_minY'),
+			maxYLocation: requireUniformLocation(this.gl, faceProgram, 'u_maxY'),
 		}
 
 		this.gl.enable(this.gl.DEPTH_TEST)
 		this.gl.clearColor(0.80, 0.80, 0.80, 1)
 	}
 
-	private drawEdges(mvp: Float32Array): void {
-		const gl = this.gl
-		const geometry = this.scene.geometry
-
-		gl.depthMask(true)
-		gl.disable(gl.BLEND)
-		gl.disable(gl.CULL_FACE)
-
-		gl.useProgram(this.edge.program)
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
-		gl.enableVertexAttribArray(this.edge.positionLocation)
-		gl.vertexAttribPointer(this.edge.positionLocation, 3, gl.FLOAT, false, 0, 0)
-		gl.uniformMatrix4fv(this.edge.mvpLocation, false, mvp)
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.edgeIndexBuffer)
-		gl.drawElements(gl.LINES, geometry.edgeIndices.length, gl.UNSIGNED_SHORT, 0)
-	}
-
 	private drawFaces(cullMode: number): void {
 		const gl = this.gl
 
 		gl.cullFace(cullMode)
-		const faceResources = this.face
 		for (const faceData of this.faceRenderData) {
-			gl.uniform3fv(faceResources.normalLocation, new Float32Array(faceData.normal))
-			gl.uniform4fv(faceResources.colorLocation, new Float32Array(faceData.color))
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, faceData.indexBuffer)
 			gl.drawElements(gl.TRIANGLES, faceData.indexCount, gl.UNSIGNED_SHORT, 0)
 		}
@@ -141,8 +96,13 @@ class FigureRenderer {
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer)
 		gl.enableVertexAttribArray(face.positionLocation)
 		gl.vertexAttribPointer(face.positionLocation, 3, gl.FLOAT, false, 0, 0)
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer)
+		gl.enableVertexAttribArray(face.normalLocation)
+		gl.vertexAttribPointer(face.normalLocation, 3, gl.FLOAT, false, 0, 0)
 		gl.uniformMatrix4fv(face.mvpLocation, false, mvp)
 		gl.uniform3fv(face.lightDirectionLocation, new Float32Array(this.scene.lightDirection))
+		gl.uniform1f(face.minYLocation, this.scene.geometry.minY)
+		gl.uniform1f(face.maxYLocation, this.scene.geometry.maxY)
 
 		this.drawFaces(gl.FRONT)
 		this.drawFaces(gl.BACK)
@@ -162,7 +122,6 @@ class FigureRenderer {
 		const mvp = createMvpMatrix(aspectRatio, cameraPosition)
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		this.drawEdges(mvp)
 		this.drawTransparentFaces(mvp)
 	}
 }

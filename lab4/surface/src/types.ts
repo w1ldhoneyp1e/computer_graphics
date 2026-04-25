@@ -6,14 +6,15 @@ type Edge = `${number}-${number}`
 
 type FigureFace = {
 	indices: Uint16Array,
-	normal: Vec3,
-	color: Vec4,
 }
 
 type FigureGeometry = {
 	vertices: Float32Array,
+	normals: Float32Array,
 	faces: FigureFace[],
 	edgeIndices: Uint16Array,
+	minY: number,
+	maxY: number,
 }
 
 type FigureScene = {
