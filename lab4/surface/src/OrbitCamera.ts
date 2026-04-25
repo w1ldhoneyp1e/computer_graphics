@@ -39,7 +39,7 @@ class OrbitCamera {
 			this.lastX = event.clientX
 			this.lastY = event.clientY
 			this.state.yaw += dx * 0.008
-			this.state.pitch = clamp(this.state.pitch + dy * 0.008, -1.45, 1.45)
+			this.state.pitch = clamp(this.state.pitch - dy * 0.008, -1.45, 1.45)
 		})
 
 		const stopDragging = (event: PointerEvent): void => {
