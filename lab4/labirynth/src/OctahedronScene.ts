@@ -31,6 +31,8 @@ class OctahedronScene implements FigureScene {
 		[0.96, 0.52, 0.16, 0.44],
 		[0.56, 0.42, 0.92, 0.44],
 	]
+	private static readonly FLOOR_COLOR: Vec4 = [0.24, 0.32, 0.78, 0.92]
+	private static readonly CEILING_COLOR: Vec4 = [0.86, 0.82, 0.68, 0.92]
 
 	constructor({
 		scale = 1.6,
@@ -80,39 +82,79 @@ class OctahedronScene implements FigureScene {
 	}
 
 	private static createOctahedronGeometry(scale = 1.6): FigureGeometry {
+		const vertices: Vec3[] = []
+		const faces: FigureGeometry['faces'] = []
+		const edgeSet = new Set<Edge>()
 		const octaVertices = OctahedronScene.createOctahedronVertices()
 		const octaFaces = OctahedronScene.createOctahedronFaces()
-		const edgeSet = new Set<Edge>()
 
-		const faces: FigureGeometry['faces'] = octaFaces.map((face, index) => {
-			const a = octaVertices[face[0]!]!
-			const b = octaVertices[face[1]!]!
-			const c = octaVertices[face[2]!]!
+		const addTriangle = (triangle: [number, number, number], color: Vec4): void => {
+			const a = vertices[triangle[0]]!
+			const b = vertices[triangle[1]]!
+			const c = vertices[triangle[2]]!
 
-			for (let i = 0; i < face.length; i++) {
+			for (let i = 0; i < triangle.length; i++) {
 				edgeSet.add(OctahedronScene.makeEdgeKey(
-					face[i]!,
-					face[(i + 1) % face.length]!,
+					triangle[i]!,
+					triangle[(i + 1) % triangle.length]!,
 				))
 			}
 
 			const cross = vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))
 
-			return {
-				indices: new Uint16Array(face),
+			faces.push({
+				indices: new Uint16Array(triangle),
 				normal: vec3Normalize(cross),
-				color: OctahedronScene.getFaceColorByIndex(index),
-			}
+				color,
+			})
+		}
+
+		const addQuad = (quadVertices: [Vec3, Vec3, Vec3, Vec3], color: Vec4): void => {
+			const startIndex = vertices.length
+			vertices.push(...quadVertices)
+			addTriangle([startIndex, startIndex + 1, startIndex + 2], color)
+			addTriangle([startIndex, startIndex + 2, startIndex + 3], color)
+		}
+
+		for (const vertex of octaVertices) {
+			vertices.push([
+				vertex[0] * scale,
+				vertex[1] * scale,
+				vertex[2] * scale,
+			])
+		}
+
+		octaFaces.forEach((face, index) => {
+			addTriangle([face[0]!, face[1]!, face[2]!], OctahedronScene.getFaceColorByIndex(index))
 		})
+
+		const roomSize = 18
+		const halfSize = roomSize / 2
+		const floorY = -2
+		const ceilingY = 4
+
+		addQuad([
+			[-halfSize, floorY, -halfSize],
+			[-halfSize, floorY, halfSize],
+			[halfSize, floorY, halfSize],
+			[halfSize, floorY, -halfSize],
+		], OctahedronScene.FLOOR_COLOR)
+
+		addQuad([
+			[-halfSize, ceilingY, -halfSize],
+			[halfSize, ceilingY, -halfSize],
+			[halfSize, ceilingY, halfSize],
+			[-halfSize, ceilingY, halfSize],
+		], OctahedronScene.CEILING_COLOR)
 
 		const edgeIndicesArray: number[] = [...edgeSet].flatMap(
 			edge => OctahedronScene.getVerticesFromEdge(edge),
 		)
 
-		const scaledVertices = new Float32Array(octaVertices.flatMap(vec3 => [
-			vec3[0] * scale,
-			vec3[1] * scale,
-			vec3[2] * scale,
+		const scaledVertices = new Float32Array(vertices.flatMap(vec3 => [
+			vec3[0],
+			vec3[1],
+			vec3[2],
 		]))
 
 		return {
