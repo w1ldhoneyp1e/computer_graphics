@@ -38,7 +38,7 @@ type FaceResources = {
 	mvpLocation: WebGLUniformLocation,
 	normalLocation: WebGLUniformLocation,
 	colorLocation: WebGLUniformLocation,
-	lightDirectionLocation: WebGLUniformLocation,
+	lightPositionLocation: WebGLUniformLocation,
 }
 
 type FigureRendererDeps = {
@@ -85,7 +85,7 @@ class FigureRenderer {
 			mvpLocation: requireUniformLocation(this.gl, faceProgram, 'u_mvp'),
 			normalLocation: requireUniformLocation(this.gl, faceProgram, 'u_normal'),
 			colorLocation: requireUniformLocation(this.gl, faceProgram, 'u_color'),
-			lightDirectionLocation: requireUniformLocation(this.gl, faceProgram, 'u_lightDir'),
+			lightPositionLocation: requireUniformLocation(this.gl, faceProgram, 'u_lightPosition'),
 		}
 
 		this.edgeResources = {
@@ -115,7 +115,7 @@ class FigureRenderer {
 		gl.drawElements(gl.LINES, geometry.edgeIndices.length, gl.UNSIGNED_SHORT, 0)
 	}
 
-	private drawFacesPass(mvp: Float32Array): void {
+	private drawFacesPass(mvp: Float32Array, lightPosition: Vec3): void {
 		const gl = this.gl
 		gl.depthMask(true)
 		gl.disable(gl.BLEND)
@@ -128,7 +128,7 @@ class FigureRenderer {
 		gl.enableVertexAttribArray(faceResources.positionLocation)
 		gl.vertexAttribPointer(faceResources.positionLocation, 3, gl.FLOAT, false, 0, 0)
 		gl.uniformMatrix4fv(faceResources.mvpLocation, false, mvp)
-		gl.uniform3fv(faceResources.lightDirectionLocation, new Float32Array(this.scene.lightDirection))
+		gl.uniform3fv(faceResources.lightPositionLocation, new Float32Array(lightPosition))
 		for (const faceData of this.faceRenderData) {
 			gl.uniform3fv(faceResources.normalLocation, new Float32Array(faceData.normal))
 			gl.uniform4fv(faceResources.colorLocation, new Float32Array(faceData.color))
@@ -150,8 +150,8 @@ class FigureRenderer {
 		const mvp = createMvpMatrix(aspectRatio, cameraPosition, cameraTarget)
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		this.drawEdges(mvp)
-		this.drawFacesPass(mvp)
+		// this.drawEdges(mvp)
+		this.drawFacesPass(mvp, cameraPosition)
 	}
 }
 
