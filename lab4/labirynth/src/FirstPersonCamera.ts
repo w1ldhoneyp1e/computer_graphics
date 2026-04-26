@@ -18,8 +18,8 @@ class FirstPersonCamera {
 		this.canvas = canvas
 
 		this.state = {
-			position: [0, 1.2, 6],
-			yaw: Math.PI,
+			position: [-6.5, 1.2, -6.5],
+			yaw: 0,
 			pitch: 0,
 		}
 
