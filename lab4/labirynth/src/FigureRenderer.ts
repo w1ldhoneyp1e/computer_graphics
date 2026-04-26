@@ -115,25 +115,11 @@ class FigureRenderer {
 		gl.drawElements(gl.LINES, geometry.edgeIndices.length, gl.UNSIGNED_SHORT, 0)
 	}
 
-	private drawFaces(cullMode: number): void {
+	private drawFacesPass(mvp: Float32Array): void {
 		const gl = this.gl
-
-		gl.cullFace(cullMode)
-		const faceResources = this.faceResources
-		for (const faceData of this.faceRenderData) {
-			gl.uniform3fv(faceResources.normalLocation, new Float32Array(faceData.normal))
-			gl.uniform4fv(faceResources.colorLocation, new Float32Array(faceData.color))
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, faceData.indexBuffer)
-			gl.drawElements(gl.TRIANGLES, faceData.indexCount, gl.UNSIGNED_SHORT, 0)
-		}
-	}
-
-	private drawTransparentFaces(mvp: Float32Array): void {
-		const gl = this.gl
-		gl.depthMask(false)
-		gl.enable(gl.BLEND)
-		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-		gl.enable(gl.CULL_FACE)
+		gl.depthMask(true)
+		gl.disable(gl.BLEND)
+		gl.disable(gl.CULL_FACE)
 
 		const faceResources = this.faceResources
 
@@ -143,12 +129,12 @@ class FigureRenderer {
 		gl.vertexAttribPointer(faceResources.positionLocation, 3, gl.FLOAT, false, 0, 0)
 		gl.uniformMatrix4fv(faceResources.mvpLocation, false, mvp)
 		gl.uniform3fv(faceResources.lightDirectionLocation, new Float32Array(this.scene.lightDirection))
-
-		this.drawFaces(gl.FRONT)
-		this.drawFaces(gl.BACK)
-
-		gl.depthMask(true)
-		gl.disable(gl.CULL_FACE)
+		for (const faceData of this.faceRenderData) {
+			gl.uniform3fv(faceResources.normalLocation, new Float32Array(faceData.normal))
+			gl.uniform4fv(faceResources.colorLocation, new Float32Array(faceData.color))
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, faceData.indexBuffer)
+			gl.drawElements(gl.TRIANGLES, faceData.indexCount, gl.UNSIGNED_SHORT, 0)
+		}
 	}
 
 	renderFrame(camera: FirstPersonCamera): void {
@@ -165,7 +151,7 @@ class FigureRenderer {
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		this.drawEdges(mvp)
-		this.drawTransparentFaces(mvp)
+		this.drawFacesPass(mvp)
 	}
 }
 
