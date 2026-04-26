@@ -87,7 +87,7 @@ function mat4Perspective(fovY: number, aspect: number, near: number, far: number
 }
 
 function createMvpMatrix(aspectRatio: number, cameraPosition: Vec3, cameraTarget: Vec3): Float32Array {
-	const projection = mat4Perspective(Math.PI / 4, aspectRatio, 0.1, 100)
+	const projection = mat4Perspective(Math.PI / 3, aspectRatio, 0.1, 100)
 	const view = mat4LookAt(cameraPosition, cameraTarget, [0, 1, 0])
 	const model = mat4Identity()
 
