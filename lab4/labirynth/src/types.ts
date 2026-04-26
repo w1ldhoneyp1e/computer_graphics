@@ -21,6 +21,11 @@ type FigureScene = {
 	readonly lightDirection: Vec3,
 }
 
+type MazeNavigator = {
+	getSpawnPosition: () => Vec3,
+	isPositionWalkable: (position: Vec3, radius: number) => boolean,
+}
+
 type FirstPersonCameraState = {
 	position: Vec3,
 	yaw: number,
@@ -30,6 +35,7 @@ type FirstPersonCameraState = {
 export {
 	type FigureFace,
 	type FigureGeometry,
+	type MazeNavigator,
 	type FigureScene,
 	type Mat4,
 	type FirstPersonCameraState,

@@ -6,8 +6,8 @@ import {MazeScene} from './MazeScene'
 function main(): void {
 	const canvas = getCanvas()
 	const gl = getGl(canvas)
-	const camera = new FirstPersonCamera(canvas)
 	const scene = new MazeScene()
+	const camera = new FirstPersonCamera(canvas, scene)
 	const renderer = new FigureRenderer({
 		canvas,
 		gl,

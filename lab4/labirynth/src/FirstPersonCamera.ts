@@ -1,4 +1,8 @@
-import {type FirstPersonCameraState, type Vec3} from './types'
+import {
+	type FirstPersonCameraState,
+	type MazeNavigator,
+	type Vec3,
+} from './types'
 
 function clamp(value: number, min: number, max: number): number {
 	return Math.min(max, Math.max(min, value))
@@ -11,14 +15,17 @@ class FirstPersonCamera {
 	private lastX = 0
 	private lastY = 0
 	private readonly canvas: HTMLCanvasElement
+	private readonly maze: MazeNavigator
 	private readonly pressedKeys = new Set<string>()
 	private lastUpdateTime = performance.now()
+	private static readonly COLLISION_RADIUS = 0.28
 
-	constructor(canvas: HTMLCanvasElement) {
+	constructor(canvas: HTMLCanvasElement, maze: MazeNavigator) {
 		this.canvas = canvas
+		this.maze = maze
 
 		this.state = {
-			position: [-6.5, 1.2, -6.5],
+			position: maze.getSpawnPosition(),
 			yaw: 0,
 			pitch: 0,
 		}
@@ -129,11 +136,23 @@ class FirstPersonCamera {
 	}
 
 	private move(direction: Vec3, distance: number): void {
-		this.state.position = [
+		const nextX: Vec3 = [
 			this.state.position[0] + direction[0] * distance,
-			this.state.position[1] + direction[1] * distance,
+			this.state.position[1],
+			this.state.position[2],
+		]
+		if (this.maze.isPositionWalkable(nextX, FirstPersonCamera.COLLISION_RADIUS)) {
+			this.state.position = nextX
+		}
+
+		const nextZ: Vec3 = [
+			this.state.position[0],
+			this.state.position[1],
 			this.state.position[2] + direction[2] * distance,
 		]
+		if (this.maze.isPositionWalkable(nextZ, FirstPersonCamera.COLLISION_RADIUS)) {
+			this.state.position = nextZ
+		}
 	}
 
 	private getForwardVector(): Vec3 {

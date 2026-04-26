@@ -7,6 +7,7 @@ import {
 	type Edge,
 	type FigureGeometry,
 	type FigureScene,
+	type MazeNavigator,
 	type Vec3,
 	type Vec4,
 } from './types'
@@ -23,7 +24,7 @@ type FaceAccumulator = {
 	edgeSet: Set<Edge>,
 }
 
-class MazeScene implements FigureScene {
+class MazeScene implements FigureScene, MazeNavigator {
 	readonly geometry: FigureGeometry
 	readonly lightDirection: Vec3
 
@@ -31,6 +32,7 @@ class MazeScene implements FigureScene {
 	private static readonly FLOOR_COLOR: Vec4 = [0.24, 0.40, 0.78, 1.0]
 	private static readonly CEILING_COLOR: Vec4 = [0.87, 0.83, 0.68, 1.0]
 	private static readonly WALL_HEIGHT = 2.5
+	private static readonly CELL_SIZE = 2
 	private static readonly MAZE: Cell[][] = [
 		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 		[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -55,6 +57,26 @@ class MazeScene implements FigureScene {
 	}: MazeSceneConstructor = {}) {
 		this.geometry = MazeScene.createMazeGeometry()
 		this.lightDirection = lightDirection
+	}
+
+	getSpawnPosition(): Vec3 {
+		return MazeScene.getCellCenter(1, 1, 1.2)
+	}
+
+	isPositionWalkable(position: Vec3, radius: number): boolean {
+		const checks: [number, number][] = [
+			[-radius, -radius],
+			[-radius, radius],
+			[radius, -radius],
+			[radius, radius],
+		]
+
+		return checks.every(([dx, dz]) => {
+			const row = MazeScene.getRowFromWorldZ(position[2] + dz)
+			const column = MazeScene.getColumnFromWorldX(position[0] + dx)
+
+			return !MazeScene.isWall(row, column)
+		})
 	}
 
 	private static makeEdgeKey(a: number, b: number): Edge {
@@ -104,15 +126,36 @@ class MazeScene implements FigureScene {
 
 	private static isWall(row: number, column: number): boolean {
 		if (row < 0 || row >= MazeScene.MAZE.length) {
-			return false
+			return true
 		}
 
 		const mazeRow = MazeScene.MAZE[row]!
 		if (column < 0 || column >= mazeRow.length) {
-			return false
+			return true
 		}
 
 		return mazeRow[column] === 1
+	}
+
+	private static getColumnFromWorldX(x: number): number {
+		const xOffset = MazeScene.MAZE[0]!.length / 2
+		return Math.floor(x / MazeScene.CELL_SIZE + xOffset)
+	}
+
+	private static getRowFromWorldZ(z: number): number {
+		const zOffset = MazeScene.MAZE.length / 2
+		return Math.floor(z / MazeScene.CELL_SIZE + zOffset)
+	}
+
+	private static getCellCenter(row: number, column: number, y: number): Vec3 {
+		const xOffset = MazeScene.MAZE[0]!.length / 2
+		const zOffset = MazeScene.MAZE.length / 2
+
+		return [
+			(column - xOffset + 0.5) * MazeScene.CELL_SIZE,
+			y,
+			(row - zOffset + 0.5) * MazeScene.CELL_SIZE,
+		]
 	}
 
 	private static createMazeGeometry(): FigureGeometry {
@@ -128,13 +171,14 @@ class MazeScene implements FigureScene {
 		const zOffset = rows / 2
 		const floorY = 0
 		const ceilingY = MazeScene.WALL_HEIGHT
+		const cellSize = MazeScene.CELL_SIZE
 
 		for (let row = 0; row < rows; row++) {
 			for (let column = 0; column < columns; column++) {
-				const x0 = column - xOffset
-				const x1 = x0 + 1
-				const z0 = row - zOffset
-				const z1 = z0 + 1
+				const x0 = (column - xOffset) * cellSize
+				const x1 = x0 + cellSize
+				const z0 = (row - zOffset) * cellSize
+				const z1 = z0 + cellSize
 
 				MazeScene.addQuad(acc, [
 					[x0, floorY, z0],
