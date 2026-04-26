@@ -81,6 +81,7 @@ class MobiusStripScene implements FigureScene {
 			MobiusStripScene.createSurfacePoint(u, v + delta, scale),
 			MobiusStripScene.createSurfacePoint(u, v - delta, scale),
 		)
+
 		return vec3Normalize(vec3Cross(uTangent, vTangent))
 	}
 
@@ -105,6 +106,12 @@ class MobiusStripScene implements FigureScene {
 				points.push(MobiusStripScene.createSurfacePoint(u, v, scale))
 				normals.push(MobiusStripScene.createSurfaceNormal(u, v, scale))
 			}
+		}
+
+		for (let j = 0; j <= vSegments; j++) {
+			const v = -(stripWidth / 2) + (stripWidth * j) / vSegments
+			points.push(MobiusStripScene.createSurfacePoint(2 * Math.PI, v, scale))
+			normals.push(MobiusStripScene.createSurfaceNormal(2 * Math.PI, v, scale))
 		}
 
 		const yValues = points.map(([, y]) => y)
@@ -142,16 +149,16 @@ class MobiusStripScene implements FigureScene {
 
 		for (let j = 0; j < vSegments; j++) {
 			const a = index(uSegments - 1, j)
+			const b = index(uSegments, j)
 			const c = index(uSegments - 1, j + 1)
-			const b = index(0, vSegments - j)
-			const d = index(0, vSegments - (j + 1))
+			const d = index(uSegments, j + 1)
 			addQuad({a, b, c, d})
 		}
 
 		const vertices = new Float32Array(
 			points.flatMap(point => point),
 		)
-		const smoothNormals = new Float32Array(
+		const normalBuffer = new Float32Array(
 			normals.flatMap(normal => normal),
 		)
 
@@ -161,7 +168,7 @@ class MobiusStripScene implements FigureScene {
 
 		return {
 			vertices,
-			normals: smoothNormals,
+			normals: normalBuffer,
 			faces,
 			edgeIndices: new Uint16Array(edgeIndicesArray),
 			minY,
