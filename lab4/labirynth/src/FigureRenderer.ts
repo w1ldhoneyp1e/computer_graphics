@@ -1,6 +1,6 @@
 import {resizeCanvasToDisplaySize} from './canvas'
+import {type FirstPersonCamera} from './FirstPersonCamera'
 import {createMvpMatrix} from './math'
-import {type OrbitCamera} from './FirstPersonCamera'
 import {
 	EDGE_FRAGMENT_SHADER,
 	EDGE_VERTEX_SHADER,
@@ -151,15 +151,17 @@ class FigureRenderer {
 		gl.disable(gl.CULL_FACE)
 	}
 
-	renderFrame(camera: OrbitCamera): void {
+	renderFrame(camera: FirstPersonCamera): void {
 		resizeCanvasToDisplaySize(this.canvas)
 
 		const gl = this.gl
 		gl.viewport(0, 0, this.canvas.width, this.canvas.height)
 
 		const aspectRatio = this.canvas.width / this.canvas.height
+		camera.update()
 		const cameraPosition = camera.getPosition()
-		const mvp = createMvpMatrix(aspectRatio, cameraPosition)
+		const cameraTarget = camera.getTarget()
+		const mvp = createMvpMatrix(aspectRatio, cameraPosition, cameraTarget)
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		this.drawEdges(mvp)

@@ -11,14 +11,16 @@ class FirstPersonCamera {
 	private lastX = 0
 	private lastY = 0
 	private readonly canvas: HTMLCanvasElement
+	private readonly pressedKeys = new Set<string>()
+	private lastUpdateTime = performance.now()
 
 	constructor(canvas: HTMLCanvasElement) {
 		this.canvas = canvas
 
 		this.state = {
-			yaw: 0.7,
-			pitch: 0.45,
-			distance: 6,
+			position: [0, 0, 6],
+			yaw: Math.PI,
+			pitch: 0,
 		}
 
 		canvas.addEventListener('pointerdown', event => {
@@ -55,18 +57,101 @@ class FirstPersonCamera {
 
 		canvas.addEventListener('pointerup', stopDragging)
 		canvas.addEventListener('pointercancel', stopDragging)
-		canvas.addEventListener('wheel', event => {
-			event.preventDefault()
-			this.state.distance = clamp(this.state.distance + event.deltaY * 0.01, 3.2, 13)
-		}, {passive: false})
+		window.addEventListener('keydown', event => {
+			this.pressedKeys.add(event.code)
+		})
+		window.addEventListener('keyup', event => {
+			this.pressedKeys.delete(event.code)
+		})
+		window.addEventListener('blur', () => {
+			this.pressedKeys.clear()
+		})
 	}
 
 	getPosition(): Vec3 {
-		const x = this.state.distance * Math.cos(this.state.pitch) * Math.sin(this.state.yaw)
-		const y = this.state.distance * Math.sin(this.state.pitch)
-		const z = this.state.distance * Math.cos(this.state.pitch) * Math.cos(this.state.yaw)
+		return [...this.state.position]
+	}
 
-		return [x, y, z]
+	getTarget(): Vec3 {
+		const forward = this.getForwardVector()
+		const {position} = this.state
+
+		return [
+			position[0] + forward[0],
+			position[1] + forward[1],
+			position[2] + forward[2],
+		]
+	}
+
+	update(): void {
+		const now = performance.now()
+		const deltaTime = Math.min((now - this.lastUpdateTime) / 1000, 0.05)
+		this.lastUpdateTime = now
+
+		const moveSpeed = 3
+		const turnSpeed = 1.8
+		const moveStep = moveSpeed * deltaTime
+		const turnStep = turnSpeed * deltaTime
+		const forward = this.getForwardVectorXZ()
+		const right: Vec3 = [forward[2], 0, -forward[0]]
+
+		if (this.pressedKeys.has('ArrowLeft')) {
+			this.state.yaw += turnStep
+		}
+
+		if (this.pressedKeys.has('ArrowRight')) {
+			this.state.yaw -= turnStep
+		}
+
+		if (this.pressedKeys.has('ArrowUp')) {
+			this.state.pitch = clamp(this.state.pitch + turnStep * 0.7, -1.2, 1.2)
+		}
+
+		if (this.pressedKeys.has('ArrowDown')) {
+			this.state.pitch = clamp(this.state.pitch - turnStep * 0.7, -1.2, 1.2)
+		}
+
+		if (this.pressedKeys.has('KeyW')) {
+			this.move(forward, moveStep)
+		}
+
+		if (this.pressedKeys.has('KeyS')) {
+			this.move(forward, -moveStep)
+		}
+
+		if (this.pressedKeys.has('KeyA')) {
+			this.move(right, -moveStep)
+		}
+
+		if (this.pressedKeys.has('KeyD')) {
+			this.move(right, moveStep)
+		}
+	}
+
+	private move(direction: Vec3, distance: number): void {
+		this.state.position = [
+			this.state.position[0] + direction[0] * distance,
+			this.state.position[1] + direction[1] * distance,
+			this.state.position[2] + direction[2] * distance,
+		]
+	}
+
+	private getForwardVector(): Vec3 {
+		const cosPitch = Math.cos(this.state.pitch)
+
+		return [
+			Math.sin(this.state.yaw) * cosPitch,
+			Math.sin(this.state.pitch),
+			Math.cos(this.state.yaw) * cosPitch,
+		]
+	}
+
+	private getForwardVectorXZ(): Vec3 {
+		return [
+			Math.sin(this.state.yaw),
+			0,
+			Math.cos(this.state.yaw),
+		]
 	}
 }
 

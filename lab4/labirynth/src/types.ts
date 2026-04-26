@@ -22,9 +22,9 @@ type FigureScene = {
 }
 
 type FirstPersonCameraState = {
+	position: Vec3,
 	yaw: number,
 	pitch: number,
-	distance: number,
 }
 
 export {
