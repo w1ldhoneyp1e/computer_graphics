@@ -127,11 +127,11 @@ class FirstPersonCamera {
 		}
 
 		if (this.pressedKeys.has('KeyA')) {
-			this.move(right, -moveStep)
+			this.move(right, moveStep)
 		}
 
 		if (this.pressedKeys.has('KeyD')) {
-			this.move(right, moveStep)
+			this.move(right, -moveStep)
 		}
 	}
 
