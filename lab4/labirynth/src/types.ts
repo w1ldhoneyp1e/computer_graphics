@@ -21,7 +21,7 @@ type FigureScene = {
 	readonly lightDirection: Vec3,
 }
 
-type OrbitCameraState = {
+type FirstPersonCameraState = {
 	yaw: number,
 	pitch: number,
 	distance: number,
@@ -32,7 +32,7 @@ export {
 	type FigureGeometry,
 	type FigureScene,
 	type Mat4,
-	type OrbitCameraState,
+	type FirstPersonCameraState,
 	type Vec3,
 	type Vec4,
 	type Edge,

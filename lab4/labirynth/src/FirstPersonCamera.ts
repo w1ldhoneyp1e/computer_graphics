@@ -1,11 +1,11 @@
-import {type OrbitCameraState, type Vec3} from './types'
+import {type FirstPersonCameraState, type Vec3} from './types'
 
 function clamp(value: number, min: number, max: number): number {
 	return Math.min(max, Math.max(min, value))
 }
 
-class OrbitCamera {
-	readonly state: OrbitCameraState
+class FirstPersonCamera {
+	readonly state: FirstPersonCameraState
 	private dragging = false
 	private pointerId: number | null = null
 	private lastX = 0
@@ -71,5 +71,5 @@ class OrbitCamera {
 }
 
 export {
-	OrbitCamera,
+	FirstPersonCamera,
 }

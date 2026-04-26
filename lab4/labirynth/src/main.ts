@@ -1,12 +1,12 @@
 import {getCanvas, getGl} from './canvas'
 import {FigureRenderer} from './FigureRenderer'
+import {FirstPersonCamera} from './FirstPersonCamera'
 import {OctahedronScene} from './OctahedronScene'
-import {OrbitCamera} from './OrbitCamera'
 
 function main(): void {
 	const canvas = getCanvas()
 	const gl = getGl(canvas)
-	const camera = new OrbitCamera(canvas)
+	const camera = new FirstPersonCamera(canvas)
 	const scene = new OctahedronScene()
 	const renderer = new FigureRenderer({
 		canvas,

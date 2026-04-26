@@ -1,6 +1,6 @@
 import {resizeCanvasToDisplaySize} from './canvas'
 import {createMvpMatrix} from './math'
-import {type OrbitCamera} from './OrbitCamera'
+import {type OrbitCamera} from './FirstPersonCamera'
 import {
 	EDGE_FRAGMENT_SHADER,
 	EDGE_VERTEX_SHADER,
