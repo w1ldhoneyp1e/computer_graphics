@@ -3,12 +3,12 @@ import {FigureRenderer} from './FigureRenderer'
 import {FirstPersonCamera} from './FirstPersonCamera'
 import {MazeScene} from './MazeScene'
 
-function main(): void {
+async function main(): Promise<void> {
 	const canvas = getCanvas()
 	const gl = getGl(canvas)
 	const scene = new MazeScene()
 	const camera = new FirstPersonCamera(canvas, scene)
-	const renderer = new FigureRenderer({
+	const renderer = await FigureRenderer.create({
 		canvas,
 		gl,
 		scene,

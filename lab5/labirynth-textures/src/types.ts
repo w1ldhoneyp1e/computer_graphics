@@ -6,8 +6,11 @@ type Edge = `${number}-${number}`
 
 type FigureFace = {
 	indices: Uint16Array,
+	vertices: Float32Array,
 	normal: Vec3,
 	color: Vec4,
+	texCoords: Float32Array,
+	textureId: number,
 }
 
 type FigureGeometry = {

@@ -1,15 +1,15 @@
 const FACE_VERTEX_SHADER = `
 attribute vec3 a_position;
+attribute vec2 a_texCoord;
 uniform mat4 u_mvp;
 uniform vec3 u_normal;
-uniform vec4 u_color;
 varying vec3 v_normal;
-varying vec4 v_color;
 varying vec3 v_worldPosition;
+varying vec2 v_texCoord;
 void main() {
 	gl_Position = u_mvp * vec4(a_position, 1.0);
+	v_texCoord = a_texCoord;
 	v_normal = u_normal;
-	v_color = u_color;
 	v_worldPosition = a_position;
 }
 `
@@ -17,15 +17,17 @@ void main() {
 const FACE_FRAGMENT_SHADER = `
 precision mediump float;
 uniform vec3 u_lightPosition;
+uniform sampler2D u_texture;
 varying vec3 v_normal;
-varying vec4 v_color;
 varying vec3 v_worldPosition;
+varying vec2 v_texCoord;
 void main() {
 	vec3 normal = normalize(v_normal);
 	if (!gl_FrontFacing) {
 		normal = -normal;
 	}
 
+	vec4 texColor = texture2D(u_texture, v_texCoord);
 	vec3 lightVector = u_lightPosition - v_worldPosition;
 	float distanceToLight = max(length(lightVector), 0.001);
 	vec3 lightDirection = lightVector / distanceToLight;
@@ -33,7 +35,7 @@ void main() {
 	float attenuation = 1.0 / (4.5 + 0.24 * distanceToLight + 0.10 * distanceToLight * distanceToLight);
 	float lightAmount = 0.12 + diffuse * attenuation * 8.0;
 	lightAmount = clamp(lightAmount, 0.10, 1.0);
-	gl_FragColor = vec4(v_color.rgb * lightAmount, v_color.a);
+	gl_FragColor = vec4(texColor.rgb * lightAmount, texColor.a);
 }
 `
 

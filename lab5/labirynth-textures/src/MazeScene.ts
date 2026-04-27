@@ -12,7 +12,7 @@ import {
 	type Vec4,
 } from './types'
 
-type Cell = 0 | 1
+type Cell = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 type MazeSceneConstructor = {
 	lightDirection?: Vec3,
@@ -28,29 +28,38 @@ class MazeScene implements FigureScene, MazeNavigator {
 	readonly geometry: FigureGeometry
 	readonly lightDirection: Vec3
 
+	static readonly FLOOR_TEXTURE_ID = 0
+	static readonly CEILING_TEXTURE_ID = 4
+
 	private static readonly WALL_COLOR: Vec4 = [0.82, 0.28, 0.24, 1.0]
 	private static readonly FLOOR_COLOR: Vec4 = [0.24, 0.40, 0.78, 1.0]
 	private static readonly CEILING_COLOR: Vec4 = [0.87, 0.83, 0.68, 1.0]
 	private static readonly WALL_HEIGHT = 2.5
 	private static readonly CELL_SIZE = 2
 	private static readonly MAZE: Cell[][] = [
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-		[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-		[1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-		[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-		[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
-		[1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-		[1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-		[1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-		[1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
-		[1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
-		[1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-		[1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-		[1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+		[2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[2, 0, 2, 5, 5, 0, 5, 0, 6, 6, 2, 2, 2, 2, 0, 1],
+		[2, 0, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 0, 1],
+		[2, 0, 2, 0, 5, 5, 5, 6, 6, 6, 2, 2, 0, 2, 0, 1],
+		[2, 0, 2, 0, 6, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 1],
+		[2, 0, 2, 0, 6, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 1],
+		[2, 0, 2, 0, 6, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 1],
+		[2, 0, 2, 0, 6, 6, 6, 6, 0, 1, 0, 2, 3, 2, 0, 1],
+		[2, 0, 2, 0, 0, 0, 0, 6, 0, 1, 0, 0, 0, 2, 0, 1],
+		[2, 0, 3, 3, 3, 3, 0, 6, 0, 1, 2, 2, 0, 2, 0, 1],
+		[2, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 2, 0, 1],
+		[2, 3, 3, 3, 0, 3, 4, 4, 0, 1, 0, 2, 2, 2, 0, 1],
+		[4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 1],
+		[4, 0, 4, 4, 4, 4, 0, 4, 1, 1, 0, 2, 0, 2, 0, 1],
+		[4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 2, 2, 2, 1],
 	]
+	private static readonly DEFAULT_TEX_COORDS = new Float32Array([
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1,
+	])
 
 	constructor({
 		lightDirection = [-3, -4, -2],
@@ -90,14 +99,42 @@ class MazeScene implements FigureScene, MazeNavigator {
 		return [Number(a), Number(b)]
 	}
 
-	private static addTriangle(
+	private static addTriangle({
+		acc,
+		triangle,
+		quadStartIndex,
+		color,
+		quadTexCoords,
+		textureId,
+	}: {
 		acc: FaceAccumulator,
 		triangle: [number, number, number],
+		quadStartIndex: number,
 		color: Vec4,
-	): void {
+		quadTexCoords: Float32Array,
+		textureId: number,
+	}): void {
 		const a = acc.vertices[triangle[0]]!
 		const b = acc.vertices[triangle[1]]!
 		const c = acc.vertices[triangle[2]]!
+		const localIndices: Vec3 = [
+			triangle[0] - quadStartIndex,
+			triangle[1] - quadStartIndex,
+			triangle[2] - quadStartIndex,
+		]
+		const triangleVertices = new Float32Array([
+			...a,
+			...b,
+			...c,
+		])
+		const triangleTexCoords = new Float32Array([
+			quadTexCoords[localIndices[0] * 2]!,
+			quadTexCoords[localIndices[0] * 2 + 1]!,
+			quadTexCoords[localIndices[1] * 2]!,
+			quadTexCoords[localIndices[1] * 2 + 1]!,
+			quadTexCoords[localIndices[2] * 2]!,
+			quadTexCoords[localIndices[2] * 2 + 1]!,
+		])
 
 		for (let i = 0; i < triangle.length; i++) {
 			acc.edgeSet.add(MazeScene.makeEdgeKey(
@@ -107,9 +144,12 @@ class MazeScene implements FigureScene, MazeNavigator {
 		}
 
 		acc.faces.push({
-			indices: new Uint16Array(triangle),
+			indices: new Uint16Array([0, 1, 2]),
+			vertices: triangleVertices,
 			normal: vec3Normalize(vec3Cross(vec3Subtract(b, a), vec3Subtract(c, a))),
 			color,
+			texCoords: triangleTexCoords,
+			textureId,
 		})
 	}
 
@@ -117,11 +157,26 @@ class MazeScene implements FigureScene, MazeNavigator {
 		acc: FaceAccumulator,
 		quadVertices: [Vec3, Vec3, Vec3, Vec3],
 		color: Vec4,
+		textureId: number,
 	): void {
 		const start = acc.vertices.length
 		acc.vertices.push(...quadVertices)
-		MazeScene.addTriangle(acc, [start, start + 1, start + 2], color)
-		MazeScene.addTriangle(acc, [start, start + 2, start + 3], color)
+		MazeScene.addTriangle({
+			acc,
+			triangle: [start, start + 1, start + 2],
+			quadStartIndex: start,
+			color,
+			quadTexCoords: MazeScene.DEFAULT_TEX_COORDS,
+			textureId,
+		})
+		MazeScene.addTriangle({
+			acc,
+			triangle: [start, start + 2, start + 3],
+			quadStartIndex: start,
+			color,
+			quadTexCoords: MazeScene.DEFAULT_TEX_COORDS,
+			textureId,
+		})
 	}
 
 	private static isWall(row: number, column: number): boolean {
@@ -134,7 +189,7 @@ class MazeScene implements FigureScene, MazeNavigator {
 			return true
 		}
 
-		return mazeRow[column] === 1
+		return mazeRow[column] !== 0
 	}
 
 	private static getColumnFromWorldX(x: number): number {
@@ -185,18 +240,21 @@ class MazeScene implements FigureScene, MazeNavigator {
 					[x0, floorY, z1],
 					[x1, floorY, z1],
 					[x1, floorY, z0],
-				], MazeScene.FLOOR_COLOR)
+				], MazeScene.FLOOR_COLOR, MazeScene.FLOOR_TEXTURE_ID)
 
 				MazeScene.addQuad(acc, [
 					[x0, ceilingY, z0],
 					[x1, ceilingY, z0],
 					[x1, ceilingY, z1],
 					[x0, ceilingY, z1],
-				], MazeScene.CEILING_COLOR)
+				], MazeScene.CEILING_COLOR, MazeScene.CEILING_TEXTURE_ID)
 
 				if (!MazeScene.isWall(row, column)) {
 					continue
 				}
+
+				const wallType = MazeScene.MAZE[row]![column]!
+				const textureId = wallType - 1
 
 				if (!MazeScene.isWall(row - 1, column)) {
 					MazeScene.addQuad(acc, [
@@ -204,7 +262,7 @@ class MazeScene implements FigureScene, MazeNavigator {
 						[x1, floorY, z0],
 						[x1, ceilingY, z0],
 						[x0, ceilingY, z0],
-					], MazeScene.WALL_COLOR)
+					], MazeScene.WALL_COLOR, textureId)
 				}
 
 				if (!MazeScene.isWall(row + 1, column)) {
@@ -213,7 +271,7 @@ class MazeScene implements FigureScene, MazeNavigator {
 						[x0, floorY, z1],
 						[x0, ceilingY, z1],
 						[x1, ceilingY, z1],
-					], MazeScene.WALL_COLOR)
+					], MazeScene.WALL_COLOR, textureId)
 				}
 
 				if (!MazeScene.isWall(row, column - 1)) {
@@ -222,7 +280,7 @@ class MazeScene implements FigureScene, MazeNavigator {
 						[x0, floorY, z0],
 						[x0, ceilingY, z0],
 						[x0, ceilingY, z1],
-					], MazeScene.WALL_COLOR)
+					], MazeScene.WALL_COLOR, textureId)
 				}
 
 				if (!MazeScene.isWall(row, column + 1)) {
@@ -231,7 +289,7 @@ class MazeScene implements FigureScene, MazeNavigator {
 						[x1, floorY, z1],
 						[x1, ceilingY, z1],
 						[x1, ceilingY, z0],
-					], MazeScene.WALL_COLOR)
+					], MazeScene.WALL_COLOR, textureId)
 				}
 			}
 		}
