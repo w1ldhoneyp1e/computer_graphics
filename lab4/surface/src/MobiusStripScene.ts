@@ -98,7 +98,7 @@ class MobiusStripScene implements FigureScene {
 
 		const index = (uIndex: number, vIndex: number): number => uIndex * (vSegments + 1) + vIndex
 
-		for (let i = 0; i < uSegments; i++) {
+		for (let i = 0; i <= uSegments; i++) {
 			const u = (2 * Math.PI * i) / uSegments
 
 			for (let j = 0; j <= vSegments; j++) {
@@ -106,12 +106,6 @@ class MobiusStripScene implements FigureScene {
 				points.push(MobiusStripScene.createSurfacePoint(u, v, scale))
 				normals.push(MobiusStripScene.createSurfaceNormal(u, v, scale))
 			}
-		}
-
-		for (let j = 0; j <= vSegments; j++) {
-			const v = -(stripWidth / 2) + (stripWidth * j) / vSegments
-			points.push(MobiusStripScene.createSurfacePoint(2 * Math.PI, v, scale))
-			normals.push(MobiusStripScene.createSurfaceNormal(2 * Math.PI, v, scale))
 		}
 
 		const yValues = points.map(([, y]) => y)
