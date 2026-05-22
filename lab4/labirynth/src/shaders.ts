@@ -29,10 +29,10 @@ void main() {
 	vec3 lightVector = u_lightPosition - v_worldPosition;
 	float distanceToLight = max(length(lightVector), 0.001);
 	vec3 lightDirection = lightVector / distanceToLight;
-	float diffuse = max(dot(normal, lightDirection), 0.0);
-	float attenuation = 1.0 / (1.0 + 0.35 * distanceToLight + 0.25 * distanceToLight * distanceToLight);
-	float lightAmount = 0.04 + diffuse * attenuation * 3.0;
-	lightAmount = clamp(lightAmount, 0.04, 1.0);
+	float attenuation = 1.0 / (4.5 + 0.24 * distanceToLight + 0.10 * distanceToLight * distanceToLight);
+	float diffuseRaw = max(dot(normal, lightDirection), 0.0);
+	float diffuse = 0.85 + 0.15 * diffuseRaw;
+	float lightAmount = 0.1 + diffuse * attenuation * 0.9;
 	gl_FragColor = vec4(v_color.rgb * lightAmount, v_color.a);
 }
 `
