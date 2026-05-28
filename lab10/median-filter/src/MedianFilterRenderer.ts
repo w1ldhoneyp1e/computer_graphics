@@ -104,13 +104,16 @@ class MedianFilterRenderer {
 
 	setImage(source: ImageSource, width: number, height: number): void {
 		const gl = this.gl
-		this.imageWidth = Math.max(1, width)
-		this.imageHeight = Math.max(1, height)
+		resizeCanvasToDisplaySize(this.canvas)
+
+		const fittedImage = this.createFittedImage(source, width, height)
+		this.imageWidth = fittedImage.width
+		this.imageHeight = fittedImage.height
 		this.hasImage = true
 
 		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fittedImage)
 
 		gl.bindTexture(gl.TEXTURE_2D, this.filteredTexture)
 		gl.texImage2D(
@@ -147,6 +150,25 @@ class MedianFilterRenderer {
 		else {
 			this.renderToScreen(this.sourceTexture)
 		}
+	}
+
+	private createFittedImage(source: ImageSource, width: number, height: number): HTMLCanvasElement {
+		const maxCanvasSide = Math.max(this.canvas.width, this.canvas.height, 1)
+		const maxImageSide = Math.max(width, height, 1)
+		const scale = Math.min(1, maxCanvasSide / maxImageSide)
+		const fittedWidth = Math.max(1, Math.floor(width * scale))
+		const fittedHeight = Math.max(1, Math.floor(height * scale))
+		const fittedImage = document.createElement('canvas')
+		fittedImage.width = fittedWidth
+		fittedImage.height = fittedHeight
+
+		const context = fittedImage.getContext('2d')
+		if (!context) {
+			throw new Error('Не удалось подготовить изображение')
+		}
+		context.drawImage(source, 0, 0, fittedWidth, fittedHeight)
+
+		return fittedImage
 	}
 
 	private createProgramResources(
