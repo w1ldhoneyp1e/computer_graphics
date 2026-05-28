@@ -25,7 +25,8 @@ type ProgramResources = {
 class MedianFilterRenderer {
 	private readonly canvas: HTMLCanvasElement
 	private readonly gl: WebGLRenderingContext
-	private readonly positionBuffer: WebGLBuffer
+	private readonly filterPositionBuffer: WebGLBuffer
+	private readonly screenPositionBuffer: WebGLBuffer
 	private readonly texCoordBuffer: WebGLBuffer
 	private readonly copyResources: ProgramResources
 	private readonly medianResources: ProgramResources
@@ -40,7 +41,15 @@ class MedianFilterRenderer {
 	constructor(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		this.canvas = canvas
 		this.gl = gl
-		this.positionBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
+		this.filterPositionBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
+			-1, -1,
+			1, -1,
+			-1, 1,
+			-1, 1,
+			1, -1,
+			1, 1,
+		]))
+		this.screenPositionBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
 			-1, -1,
 			1, -1,
 			-1, 1,
@@ -142,11 +151,27 @@ class MedianFilterRenderer {
 		return resources
 	}
 
-	private bindQuad(resources: ProgramResources): void {
+	private updateScreenQuadPositions(): void {
+		const gl = this.gl
+		const width = this.imageWidth / this.canvas.width
+		const height = this.imageHeight / this.canvas.height
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.screenPositionBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+			-width, -height,
+			width, -height,
+			-width, height,
+			-width, height,
+			width, -height,
+			width, height,
+		]), gl.DYNAMIC_DRAW)
+	}
+
+	private bindQuad(resources: ProgramResources, positionBuffer: WebGLBuffer): void {
 		const gl = this.gl
 
 		gl.useProgram(resources.program)
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer)
+		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 		gl.enableVertexAttribArray(resources.positionLocation)
 		gl.vertexAttribPointer(resources.positionLocation, 2, gl.FLOAT, false, 0, 0)
 
@@ -180,7 +205,7 @@ class MedianFilterRenderer {
 
 		gl.viewport(0, 0, this.imageWidth, this.imageHeight)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		this.bindQuad(this.medianResources)
+		this.bindQuad(this.medianResources, this.filterPositionBuffer)
 		gl.uniform2f(texelSizeLocation, 1 / this.imageWidth, 1 / this.imageHeight)
 		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
 		gl.drawArrays(gl.TRIANGLES, 0, 6)
@@ -191,7 +216,8 @@ class MedianFilterRenderer {
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 		gl.viewport(0, 0, this.canvas.width, this.canvas.height)
 		gl.clear(gl.COLOR_BUFFER_BIT)
-		this.bindQuad(this.copyResources)
+		this.updateScreenQuadPositions()
+		this.bindQuad(this.copyResources, this.screenPositionBuffer)
 		gl.bindTexture(gl.TEXTURE_2D, texture)
 		gl.drawArrays(gl.TRIANGLES, 0, 6)
 	}
