@@ -25,6 +25,33 @@ function getFilterToggle(): HTMLInputElement {
 	return input
 }
 
+function getRadiusInfo(): HTMLElement {
+	const info = document.getElementById('radiusInfo')
+	if (!info) {
+		throw new Error('Индикатор радиуса не найден')
+	}
+
+	return info
+}
+
+function getRadiusDecButton(): HTMLButtonElement {
+	const button = document.getElementById('radiusDecButton')
+	if (!(button instanceof HTMLButtonElement)) {
+		throw new Error('Кнопка уменьшения радиуса не найдена')
+	}
+
+	return button
+}
+
+function getRadiusIncButton(): HTMLButtonElement {
+	const button = document.getElementById('radiusIncButton')
+	if (!(button instanceof HTMLButtonElement)) {
+		throw new Error('Кнопка увеличения радиуса не найдена')
+	}
+
+	return button
+}
+
 function getGl(canvas: HTMLCanvasElement): WebGLRenderingContext {
 	const gl = canvas.getContext('webgl', {
 		alpha: false,
@@ -55,5 +82,8 @@ export {
 	getFilterToggle,
 	getGl,
 	getImageInput,
+	getRadiusDecButton,
+	getRadiusIncButton,
+	getRadiusInfo,
 	resizeCanvasToDisplaySize,
 }

@@ -19,6 +19,7 @@ type ProgramResources = {
 	positionLocation: number,
 	texCoordLocation: number,
 	imageLocation: WebGLUniformLocation,
+	radiusLocation?: WebGLUniformLocation,
 	texelSizeLocation?: WebGLUniformLocation,
 }
 
@@ -35,6 +36,7 @@ class MedianFilterRenderer {
 	private readonly frameBuffer: WebGLFramebuffer
 	private imageWidth = 1
 	private imageHeight = 1
+	private filterRadius = 1
 	private filterEnabled = true
 	private hasImage = false
 
@@ -67,10 +69,8 @@ class MedianFilterRenderer {
 		]))
 
 		const copyProgram = createProgram(gl, FULLSCREEN_VERTEX_SHADER, COPY_FRAGMENT_SHADER)
-		const medianProgram = createProgram(gl, FULLSCREEN_VERTEX_SHADER, MEDIAN_FRAGMENT_SHADER)
-
 		this.copyResources = this.createProgramResources(copyProgram)
-		this.medianResources = this.createProgramResources(medianProgram, true)
+		this.medianResources = this.createMedianResources()
 		this.sourceTexture = createTexture(gl)
 		this.filteredTexture = createTexture(gl)
 
@@ -80,11 +80,25 @@ class MedianFilterRenderer {
 		}
 		this.frameBuffer = frameBuffer
 
-		gl.clearColor(0.05, 0.06, 0.08, 1)
+		gl.clearColor(1, 1, 1, 1)
 	}
 
 	setFilterEnabled(enabled: boolean): void {
 		this.filterEnabled = enabled
+		this.render()
+	}
+
+	getFilterRadius(): number {
+		return this.filterRadius
+	}
+
+	setFilterRadius(radius: number): void {
+		const nextRadius = Math.max(1, Math.min(7, Math.round(radius)))
+		if (nextRadius === this.filterRadius) {
+			return
+		}
+
+		this.filterRadius = nextRadius
 		this.render()
 	}
 
@@ -135,7 +149,11 @@ class MedianFilterRenderer {
 		}
 	}
 
-	private createProgramResources(program: WebGLProgram, needsTexelSize = false): ProgramResources {
+	private createProgramResources(
+		program: WebGLProgram,
+		needsTexelSize = false,
+		needsRadius = false,
+	): ProgramResources {
 		const gl = this.gl
 		const resources: ProgramResources = {
 			program,
@@ -147,8 +165,17 @@ class MedianFilterRenderer {
 		if (needsTexelSize) {
 			resources.texelSizeLocation = requireUniformLocation(gl, program, 'u_texelSize')
 		}
+		if (needsRadius) {
+			resources.radiusLocation = requireUniformLocation(gl, program, 'u_radius')
+		}
 
 		return resources
+	}
+
+	private createMedianResources(): ProgramResources {
+		const program = createProgram(this.gl, FULLSCREEN_VERTEX_SHADER, MEDIAN_FRAGMENT_SHADER)
+
+		return this.createProgramResources(program, true, true)
 	}
 
 	private updateScreenQuadPositions(): void {
@@ -185,8 +212,9 @@ class MedianFilterRenderer {
 
 	private renderMedianPass(): void {
 		const gl = this.gl
+		const radiusLocation = this.medianResources.radiusLocation
 		const texelSizeLocation = this.medianResources.texelSizeLocation
-		if (!texelSizeLocation) {
+		if (!radiusLocation || !texelSizeLocation) {
 			throw new Error('Юниформ u_texelSize не найден')
 		}
 
@@ -206,6 +234,7 @@ class MedianFilterRenderer {
 		gl.viewport(0, 0, this.imageWidth, this.imageHeight)
 		gl.clear(gl.COLOR_BUFFER_BIT)
 		this.bindQuad(this.medianResources, this.filterPositionBuffer)
+		gl.uniform1i(radiusLocation, this.filterRadius)
 		gl.uniform2f(texelSizeLocation, 1 / this.imageWidth, 1 / this.imageHeight)
 		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
 		gl.drawArrays(gl.TRIANGLES, 0, 6)
