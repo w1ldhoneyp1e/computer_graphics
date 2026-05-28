@@ -1,0 +1,201 @@
+import {resizeCanvasToDisplaySize} from './canvas'
+import {
+	COPY_FRAGMENT_SHADER,
+	FULLSCREEN_VERTEX_SHADER,
+	MEDIAN_FRAGMENT_SHADER,
+} from './shaders'
+import {
+	createBuffer,
+	createProgram,
+	createTexture,
+	requireAttribLocation,
+	requireUniformLocation,
+} from './webgl'
+
+type ImageSource = HTMLImageElement
+
+type ProgramResources = {
+	program: WebGLProgram,
+	positionLocation: number,
+	texCoordLocation: number,
+	imageLocation: WebGLUniformLocation,
+	texelSizeLocation?: WebGLUniformLocation,
+}
+
+class MedianFilterRenderer {
+	private readonly canvas: HTMLCanvasElement
+	private readonly gl: WebGLRenderingContext
+	private readonly positionBuffer: WebGLBuffer
+	private readonly texCoordBuffer: WebGLBuffer
+	private readonly copyResources: ProgramResources
+	private readonly medianResources: ProgramResources
+	private readonly sourceTexture: WebGLTexture
+	private readonly filteredTexture: WebGLTexture
+	private readonly frameBuffer: WebGLFramebuffer
+	private imageWidth = 1
+	private imageHeight = 1
+	private filterEnabled = true
+	private hasImage = false
+
+	constructor(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
+		this.canvas = canvas
+		this.gl = gl
+		this.positionBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
+			-1, -1,
+			1, -1,
+			-1, 1,
+			-1, 1,
+			1, -1,
+			1, 1,
+		]))
+		this.texCoordBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
+			0, 1,
+			1, 1,
+			0, 0,
+			0, 0,
+			1, 1,
+			1, 0,
+		]))
+
+		const copyProgram = createProgram(gl, FULLSCREEN_VERTEX_SHADER, COPY_FRAGMENT_SHADER)
+		const medianProgram = createProgram(gl, FULLSCREEN_VERTEX_SHADER, MEDIAN_FRAGMENT_SHADER)
+
+		this.copyResources = this.createProgramResources(copyProgram)
+		this.medianResources = this.createProgramResources(medianProgram, true)
+		this.sourceTexture = createTexture(gl)
+		this.filteredTexture = createTexture(gl)
+
+		const frameBuffer = gl.createFramebuffer()
+		if (!frameBuffer) {
+			throw new Error('Не удалось создать буфер кадра')
+		}
+		this.frameBuffer = frameBuffer
+
+		gl.clearColor(0.05, 0.06, 0.08, 1)
+	}
+
+	setFilterEnabled(enabled: boolean): void {
+		this.filterEnabled = enabled
+		this.render()
+	}
+
+	setImage(source: ImageSource, width: number, height: number): void {
+		const gl = this.gl
+		this.imageWidth = Math.max(1, width)
+		this.imageHeight = Math.max(1, height)
+		this.hasImage = true
+
+		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
+
+		gl.bindTexture(gl.TEXTURE_2D, this.filteredTexture)
+		gl.texImage2D(
+			gl.TEXTURE_2D,
+			0,
+			gl.RGBA,
+			this.imageWidth,
+			this.imageHeight,
+			0,
+			gl.RGBA,
+			gl.UNSIGNED_BYTE,
+			null,
+		)
+
+		this.render()
+	}
+
+	render(): void {
+		resizeCanvasToDisplaySize(this.canvas)
+
+		const gl = this.gl
+		if (!this.hasImage) {
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+			gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+			gl.clear(gl.COLOR_BUFFER_BIT)
+
+			return
+		}
+
+		if (this.filterEnabled) {
+			this.renderMedianPass()
+			this.renderToScreen(this.filteredTexture)
+		}
+		else {
+			this.renderToScreen(this.sourceTexture)
+		}
+	}
+
+	private createProgramResources(program: WebGLProgram, needsTexelSize = false): ProgramResources {
+		const gl = this.gl
+		const resources: ProgramResources = {
+			program,
+			positionLocation: requireAttribLocation(gl, program, 'a_position'),
+			texCoordLocation: requireAttribLocation(gl, program, 'a_texCoord'),
+			imageLocation: requireUniformLocation(gl, program, 'u_image'),
+		}
+
+		if (needsTexelSize) {
+			resources.texelSizeLocation = requireUniformLocation(gl, program, 'u_texelSize')
+		}
+
+		return resources
+	}
+
+	private bindQuad(resources: ProgramResources): void {
+		const gl = this.gl
+
+		gl.useProgram(resources.program)
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer)
+		gl.enableVertexAttribArray(resources.positionLocation)
+		gl.vertexAttribPointer(resources.positionLocation, 2, gl.FLOAT, false, 0, 0)
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer)
+		gl.enableVertexAttribArray(resources.texCoordLocation)
+		gl.vertexAttribPointer(resources.texCoordLocation, 2, gl.FLOAT, false, 0, 0)
+
+		gl.activeTexture(gl.TEXTURE0)
+		gl.uniform1i(resources.imageLocation, 0)
+	}
+
+	private renderMedianPass(): void {
+		const gl = this.gl
+		const texelSizeLocation = this.medianResources.texelSizeLocation
+		if (!texelSizeLocation) {
+			throw new Error('Юниформ u_texelSize не найден')
+		}
+
+		gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer)
+		gl.framebufferTexture2D(
+			gl.FRAMEBUFFER,
+			gl.COLOR_ATTACHMENT0,
+			gl.TEXTURE_2D,
+			this.filteredTexture,
+			0,
+		)
+
+		if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+			throw new Error('Буфер кадра WebGL не завершен')
+		}
+
+		gl.viewport(0, 0, this.imageWidth, this.imageHeight)
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		this.bindQuad(this.medianResources)
+		gl.uniform2f(texelSizeLocation, 1 / this.imageWidth, 1 / this.imageHeight)
+		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
+		gl.drawArrays(gl.TRIANGLES, 0, 6)
+	}
+
+	private renderToScreen(texture: WebGLTexture): void {
+		const gl = this.gl
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+		gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+		gl.clear(gl.COLOR_BUFFER_BIT)
+		this.bindQuad(this.copyResources)
+		gl.bindTexture(gl.TEXTURE_2D, texture)
+		gl.drawArrays(gl.TRIANGLES, 0, 6)
+	}
+}
+
+export {
+	MedianFilterRenderer,
+}
