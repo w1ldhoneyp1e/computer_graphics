@@ -49,12 +49,12 @@ class MedianFilterRenderer {
 			1, 1,
 		]))
 		this.texCoordBuffer = createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array([
-			0, 1,
-			1, 1,
 			0, 0,
-			0, 0,
-			1, 1,
 			1, 0,
+			0, 1,
+			0, 1,
+			1, 0,
+			1, 1,
 		]))
 
 		const copyProgram = createProgram(gl, FULLSCREEN_VERTEX_SHADER, COPY_FRAGMENT_SHADER)
@@ -86,6 +86,7 @@ class MedianFilterRenderer {
 		this.hasImage = true
 
 		gl.bindTexture(gl.TEXTURE_2D, this.sourceTexture)
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
 
 		gl.bindTexture(gl.TEXTURE_2D, this.filteredTexture)
