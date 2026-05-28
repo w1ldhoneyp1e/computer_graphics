@@ -37,6 +37,7 @@ function main(): void {
 	const radiusIncButton = getRadiusIncButton()
 
 	updateRadiusControls(radiusInfo, radiusDecButton, radiusIncButton, renderer.getFilterRadius())
+	renderer.render()
 
 	filterToggle.addEventListener('change', () => {
 		renderer.setFilterEnabled(filterToggle.checked)
