@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Медианный фильтр</title>
+	<link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+	<main class="app">
+		<header class="toolbar">
+			<label class="fileButton">
+				<input id="imageInput" type="file" accept="image/*" />
+				Загрузить изображение
+			</label>
+			<label class="toggle">
+				<input id="filterToggle" type="checkbox" checked />
+				<span>Медианно фильтровать</span>
+			</label>
+			<div class="radiusControl" aria-label="Радиус медианного фильтра">
+				<span id="radiusInfo" class="radiusInfo"></span>
+				<button id="radiusDecButton" class="radiusButton" type="button">-</button>
+				<button id="radiusIncButton" class="radiusButton" type="button">+</button>
+			</div>
+		</header>
+		<canvas id="app"></canvas>
+	</main>
+	<script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>
