@@ -29,7 +29,7 @@ uniform vec2 u_texelSize;
 varying vec2 v_texCoord;
 
 float luminance(vec3 color) {
-	return dot(color, vec3(0.299, 0.587, 0.114));
+	return dot(color, vec3(0.21, 0.72, 0.07));
 }
 
 void main() {
